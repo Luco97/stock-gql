@@ -5,7 +5,7 @@ import { SignIn } from '../inputs/sign-in.input';
 import { response } from '../outputs/response.output';
 import { UserRepositoryService } from '../repository/user-repository.service';
 
-@Resolver(() => response)
+@Resolver()
 export class SignInResolver {
   constructor(private _userRepo: UserRepositoryService) {}
 
