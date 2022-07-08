@@ -1,3 +1,5 @@
+import { Field, ID, ObjectType } from '@nestjs/graphql';
+
 import {
   Column,
   CreateDateColumn,
@@ -7,7 +9,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+
 import { UserEntity } from '../../user/model/user-entity';
 
 @Entity()
