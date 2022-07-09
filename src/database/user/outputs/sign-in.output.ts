@@ -1,7 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
-export class response {
+export class SignInOutput {
   @Field(() => Number)
   status: number;
 
