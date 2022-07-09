@@ -27,7 +27,7 @@ export class UserEntity {
   username: string;
 
   @Field(() => String)
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', select: false })
   password: string;
 
   @Field(() => String)
