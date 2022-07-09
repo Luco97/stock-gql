@@ -2,7 +2,7 @@ import { Field, InputType } from '@nestjs/graphql';
 import { IsEmail, MinLength } from 'class-validator';
 
 @InputType()
-export class LogIn {
+export class LogInInput {
   @Field(() => String)
   @IsEmail()
   email: string;

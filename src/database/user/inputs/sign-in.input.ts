@@ -3,7 +3,7 @@ import { IsEmail, MinLength } from 'class-validator';
 import { UserEntity } from '../model/user-entity';
 
 @InputType()
-export class SignIn implements Partial<UserEntity> {
+export class SignInInput implements Partial<UserEntity> {
   @Field(() => String)
   @IsEmail()
   email: string;
