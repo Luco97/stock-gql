@@ -1,8 +1,11 @@
+// Modules
 import { Module } from '@nestjs/common';
 import { ApolloDriver } from '@nestjs/apollo';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+
+import { AuthModule } from '../shared/auth/auth.module';
 
 // Entities
 import { UserEntity } from './user/model/user-entity';
@@ -41,8 +44,9 @@ import { UpdateItemResolver } from './item/resolver/update-item.resolver';
     TypeOrmModule.forFeature([UserEntity, ItemEntity]),
     GraphQLModule.forRoot({
       driver: ApolloDriver,
-      autoSchemaFile: 'schema.gql',
+      autoSchemaFile: 'types.gql',
     }),
+    AuthModule,
   ],
   providers: [
     UserRepositoryService,
