@@ -21,10 +21,10 @@ import { UserRepositoryService } from './user/repository/user-repository.service
 
 // Items respolvers
 import { ReadItemResolver } from './item/resolver/read-item.resolver';
-import { GetItemsResolver } from './item/resolver/get-items.resolver';
 import { CreateItemResolver } from './item/resolver/create-item.resolver';
 import { DeleteItemResolver } from './item/resolver/delete-item.resolver';
 import { UpdateItemResolver } from './item/resolver/update-item.resolver';
+import { ReadItemsAdminResolver } from './item/resolver/read-items-admin.resolver';
 
 @Module({
   imports: [
@@ -57,7 +57,7 @@ import { UpdateItemResolver } from './item/resolver/update-item.resolver';
     ReadItemResolver,
     UpdateItemResolver,
     DeleteItemResolver,
-    GetItemsResolver,
+    ReadItemsAdminResolver,
   ],
 })
 export class DatabaseModule {}
