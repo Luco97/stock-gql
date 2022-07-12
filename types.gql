@@ -6,7 +6,7 @@ type ItemEntity {
   id: ID!
   name: String!
   stock: Float!
-  imageUrl: String!
+  imageUrl: String
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime!
@@ -38,8 +38,16 @@ type LogInOutput {
   token: String
 }
 
+type ItemsOutput {
+  items: [ItemEntity!]!
+  count: Float!
+}
+
 type Query {
-  getItems(paginate: ReadInput): [ItemEntity!]!
+  findAllAdmin(paginate: ReadInput): ItemsOutput!
+  findOneAdmin(id: Float!): ItemEntity!
+  findAll(paginate: ReadInput): ItemsOutput!
+  findOne(id: Float!): ItemEntity!
 }
 
 input ReadInput {
