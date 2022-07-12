@@ -1,16 +1,16 @@
 import { HttpStatus } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Resolver } from '@nestjs/graphql';
 
-import { SignIn } from '../inputs/sign-in.input';
-import { response } from '../outputs/response.output';
+import { SignInInput } from '../inputs/sign-in.input';
+import { SignInOutput } from '../outputs/sign-in.output';
 import { UserRepositoryService } from '../repository/user-repository.service';
 
 @Resolver()
 export class SignInResolver {
   constructor(private _userRepo: UserRepositoryService) {}
 
-  @Mutation(() => response)
-  async signIn(@Args('user') createUser: SignIn): Promise<response> {
+  @Mutation(() => SignInOutput)
+  async signIn(@Args('user') createUser: SignInInput): Promise<SignInOutput> {
     const { email, password, username } = createUser;
     const findOne = await this._userRepo.userRepo
       .createQueryBuilder('user')
