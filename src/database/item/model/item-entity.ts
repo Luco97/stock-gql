@@ -27,7 +27,7 @@ export class ItemEntity {
   @Column({ type: 'int' })
   stock: number;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @Column({ type: 'varchar', nullable: true })
   imageUrl: string;
 
