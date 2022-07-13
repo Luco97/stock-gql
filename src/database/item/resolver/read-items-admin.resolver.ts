@@ -1,13 +1,14 @@
-import { UseGuards } from '@nestjs/common';
+import { SetMetadata, UseGuards } from '@nestjs/common';
 import { Args, Context, Query, Resolver } from '@nestjs/graphql';
 
+import { Request } from 'express';
+
 import { ReadInput } from '../inputs/read.input';
+import { ItemEntity } from '../model/item-entity';
+import { RoleGuard } from '../../guards/role.guard';
 import { ItemsOutput } from '../outputs/items.output';
 import { ItemRepositoryService } from '../repository/item-repository.service';
 import { UserRepositoryService } from '../../user/repository/user-repository.service';
-import { ItemEntity } from '../model/item-entity';
-import { Request } from 'express';
-import { RoleGuard } from '../../guards/role.guard';
 
 @Resolver()
 export class ReadItemsAdminResolver {
@@ -16,7 +17,8 @@ export class ReadItemsAdminResolver {
     private _userService: UserRepositoryService,
   ) {}
 
-  @Query(() => ItemsOutput)
+  @Query(() => ItemsOutput, { name: 'findAllAdmin' })
+  @SetMetadata('role', 'admin')
   @UseGuards(RoleGuard)
   async findAll(
     @Args('paginate', { nullable: true }) getInput: ReadInput,
@@ -31,7 +33,8 @@ export class ReadItemsAdminResolver {
     return { items, count };
   }
 
-  @Query(() => ItemEntity)
+  @Query(() => ItemEntity, { name: 'findOneAdmin' })
+  @SetMetadata('role', 'admin')
   @UseGuards(RoleGuard)
   async findOne(
     @Args('id') id_item: Number,
