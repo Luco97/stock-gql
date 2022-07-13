@@ -1,13 +1,14 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, Context, Query, Resolver } from '@nestjs/graphql';
 
+import { Request } from 'express';
+
+import { AuthService } from '@Shared/auth';
+import { ReadInput } from '../inputs/read.input';
 import { ItemEntity } from '../model/item-entity';
 import { AuthGuard } from '../../guards/auth.guard';
-import { ItemRepositoryService } from '../repository/item-repository.service';
-import { Request } from 'express';
-import { AuthService } from '@Shared/auth';
 import { ItemsOutput } from '../outputs/items.output';
-import { ReadInput } from '../inputs/read.input';
+import { ItemRepositoryService } from '../repository/item-repository.service';
 
 @Resolver()
 export class ReadItemResolver {
@@ -16,7 +17,7 @@ export class ReadItemResolver {
     private _itemService: ItemRepositoryService,
   ) {}
 
-  @Query(() => ItemsOutput, { name: 'findAllAdmin' })
+  @Query(() => ItemsOutput)
   @UseGuards(AuthGuard)
   async findAll(
     @Args('paginate', { nullable: true }) getInput: ReadInput,
@@ -37,7 +38,7 @@ export class ReadItemResolver {
     return { items, count };
   }
 
-  @Query(() => ItemEntity, { name: 'findOneAdmin' })
+  @Query(() => ItemEntity)
   @UseGuards(AuthGuard)
   async findOne(
     @Args('id') id_item: Number,
