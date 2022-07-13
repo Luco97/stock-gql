@@ -9,8 +9,8 @@ type ItemEntity {
   imageUrl: String
   createdAt: DateTime!
   updatedAt: DateTime!
-  deletedAt: DateTime!
-  user: UserEntity!
+  deletedAt: DateTime
+  user: UserEntity
 }
 
 """
@@ -24,7 +24,7 @@ type UserEntity {
   username: String!
   password: String!
   type: String!
-  items: [ItemEntity!]!
+  items: [ItemEntity!]
 }
 
 type SignInOutput {
@@ -43,11 +43,16 @@ type ItemsOutput {
   count: Float!
 }
 
+type ChangeOutput {
+  message: String
+  item: ItemEntity
+}
+
 type Query {
-  findAllAdmin(paginate: ReadInput): ItemsOutput!
-  findOneAdmin(id: Float!): ItemEntity!
   findAll(paginate: ReadInput): ItemsOutput!
   findOne(id: Float!): ItemEntity!
+  findAllAdmin(paginate: ReadInput): ItemsOutput!
+  findOneAdmin(id: Float!): ItemEntity!
 }
 
 input ReadInput {
@@ -58,6 +63,9 @@ input ReadInput {
 type Mutation {
   signIn(user: SignInInput!): SignInOutput!
   logIn(user: LogInInput!): LogInOutput!
+  create(paginate: CreateInput): ItemEntity!
+  update(item: UpdateInput!): ChangeOutput!
+  delete(id_item: Float!): ChangeOutput!
 }
 
 input SignInInput {
@@ -69,4 +77,17 @@ input SignInInput {
 input LogInInput {
   email: String!
   password: String!
+}
+
+input CreateInput {
+  name: String!
+  imageUrl: String!
+  stock: Float!
+}
+
+input UpdateInput {
+  id_item: Float!
+  name: String
+  imageUrl: String
+  stock: Float
 }
