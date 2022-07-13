@@ -34,7 +34,7 @@ export class UserEntity {
   @Column({ type: 'varchar', default: 'basic' })
   type: string;
 
-  @Field(() => [ItemEntity])
+  @Field(() => [ItemEntity], { nullable: true })
   @OneToMany(() => ItemEntity, (items) => items.user)
   items: ItemEntity[];
 

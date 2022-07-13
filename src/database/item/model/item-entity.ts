@@ -39,11 +39,11 @@ export class ItemEntity {
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
 
-  @Field(() => Date)
+  @Field(() => Date, { nullable: true })
   @DeleteDateColumn({ type: 'timestamp' })
   deletedAt: Date;
 
-  @Field(() => UserEntity)
+  @Field(() => UserEntity, { nullable: true })
   @ManyToOne(() => UserEntity, (user) => user.items)
   user: UserEntity;
 }
