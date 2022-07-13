@@ -1,10 +1,15 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsDefined, IsOptional, Min, MinLength } from 'class-validator';
+
+import { IsOptional, Min, MinLength } from 'class-validator';
 
 import { ItemEntity } from '../model/item-entity';
 
 @InputType()
-export class CreateInput implements Partial<ItemEntity> {
+export class UpdateInput implements Partial<ItemEntity> {
+  @Field(() => Number)
+  @Min(1)
+  id_item: number;
+
   @Field(() => String, { nullable: true })
   @IsOptional()
   @MinLength(5)
