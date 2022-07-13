@@ -20,7 +20,6 @@ export class LogInResolver {
     @Args('user') loginUser: LogInInput,
     @Context() context,
   ): Promise<LogInOutput> {
-    console.log(context);
     const { email, password } = loginUser;
     const findOne = await this._userRepo.userRepo
       .createQueryBuilder('user')
