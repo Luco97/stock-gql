@@ -10,7 +10,7 @@ export class DeleteItemResolver {
   constructor(private _itemService: ItemRepositoryService) {}
 
   @Mutation(() => ChangeOutput)
-  @SetMetadata('role', 'admin')
+  @SetMetadata('roles', ['admin'])
   @UseGuards(RoleGuard)
   async delete(
     @Args('id_item', { name: 'id_item' }) id: number,
