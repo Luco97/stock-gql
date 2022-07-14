@@ -18,7 +18,7 @@ export class RoleGuard implements CanActivate {
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const req: Request = context.switchToHttp().getNext().req;
-    const role = this._reflector.get<string>('role', context.getHandler());
+    const roles = this._reflector.get<string>('roles', context.getHandler());
     if (!this._authService.validateToken(req.headers?.authorization))
       return of(false);
     const id_user = this._authService.userID(req.headers?.authorization);
@@ -27,7 +27,7 @@ export class RoleGuard implements CanActivate {
         .createQueryBuilder('user')
         .select(['user.id', 'user.type'])
         .where('user.id = :id_user', { id_user })
-        .andWhere('user.type = :role', { role })
+        .andWhere('user.type IN :role', { roles })
         .getCount(),
     ).pipe(map<number, boolean>((count) => (count ? true : false)));
   }
