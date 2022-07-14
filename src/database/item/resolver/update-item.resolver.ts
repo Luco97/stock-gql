@@ -17,7 +17,7 @@ export class UpdateItemResolver {
   ) {}
 
   @Mutation(() => ChangeOutput)
-  @SetMetadata('role', 'basic')
+  @SetMetadata('roles', ['basic', 'admin'])
   @UseGuards(RoleGuard)
   async update(
     @Args('item') itemUpdate: UpdateInput,
