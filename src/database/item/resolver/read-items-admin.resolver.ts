@@ -3,29 +3,36 @@ import { Args, Context, Query, Resolver } from '@nestjs/graphql';
 
 import { Request } from 'express';
 
+import { AuthService } from '@Shared/auth';
 import { ReadInput } from '../inputs/read.input';
 import { ItemEntity } from '../model/item-entity';
 import { RoleGuard } from '../../guards/role.guard';
 import { ItemsOutput } from '../outputs/items.output';
 import { ItemRepositoryService } from '../repository/item-repository.service';
-import { UserRepositoryService } from '../../user/repository/user-repository.service';
 
 @Resolver()
 export class ReadItemsAdminResolver {
   constructor(
+    private _authService: AuthService,
     private _itemService: ItemRepositoryService,
-    private _userService: UserRepositoryService,
   ) {}
 
   @Query(() => ItemsOutput, { name: 'findAllAdmin' })
-  @SetMetadata('role', 'admin')
+  @SetMetadata('roles', ['admin'])
   @UseGuards(RoleGuard)
   async findAll(
     @Args('paginate', { nullable: true }) getInput: ReadInput,
+    @Context() context,
   ): Promise<ItemsOutput> {
+    const req: Request = context.req;
+    const token: string = req.headers?.authorization;
     const [items, count] = await this._itemService.itemRepo
       .createQueryBuilder('items')
       .leftJoinAndSelect('items.user', 'user')
+      .andWhere('user.type = :type', { type: 'basic' })
+      .orWhere('user.id = :id_user', {
+        id_user: this._authService.userID(token),
+      })
       .orderBy()
       .take(getInput?.take || 10)
       .skip(getInput?.skip || 0)
@@ -34,7 +41,7 @@ export class ReadItemsAdminResolver {
   }
 
   @Query(() => ItemEntity, { name: 'findOneAdmin' })
-  @SetMetadata('role', 'admin')
+  @SetMetadata('roles', ['admin'])
   @UseGuards(RoleGuard)
   async findOne(
     @Args('id') id_item: Number,
@@ -47,6 +54,9 @@ export class ReadItemsAdminResolver {
       .leftJoinAndSelect('item.user', 'user')
       .where('item.id = :id_item', { id_item })
       .andWhere('user.type = :type', { type: 'basic' })
+      .orWhere('user.id = :id_user', {
+        id_user: this._authService.userID(token),
+      })
       .getOne();
   }
 }
