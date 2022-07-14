@@ -25,6 +25,7 @@ import { CreateItemResolver } from './item/resolver/create-item.resolver';
 import { DeleteItemResolver } from './item/resolver/delete-item.resolver';
 import { UpdateItemResolver } from './item/resolver/update-item.resolver';
 import { ReadItemsAdminResolver } from './item/resolver/read-items-admin.resolver';
+import { UpdateItemAdminResolver } from './item/resolver/update-item-admin.resolver';
 
 @Module({
   imports: [
@@ -58,6 +59,7 @@ import { ReadItemsAdminResolver } from './item/resolver/read-items-admin.resolve
     UpdateItemResolver,
     DeleteItemResolver,
     ReadItemsAdminResolver,
+    UpdateItemAdminResolver,
   ],
 })
 export class DatabaseModule {}
