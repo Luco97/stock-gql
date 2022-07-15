@@ -20,11 +20,10 @@ import { SignInResolver } from './user/resolver/sign-in.resolver';
 import { UserRepositoryService } from './user/repository/user-repository.service';
 
 // Items respolvers
-import { ReadItemResolver } from './item/resolver/read-item.resolver';
 import { CreateItemResolver } from './item/resolver/create-item.resolver';
-import { DeleteItemResolver } from './item/resolver/delete-item.resolver';
+import { ReadItemResolver } from './item/resolver/read-item.resolver';
 import { UpdateItemResolver } from './item/resolver/update-item.resolver';
-import { UpdateItemAdminResolver } from './item/resolver/update-item-admin.resolver';
+import { DeleteItemResolver } from './item/resolver/delete-item.resolver';
 
 @Module({
   imports: [
@@ -56,7 +55,7 @@ import { UpdateItemAdminResolver } from './item/resolver/update-item-admin.resol
       driver: ApolloDriver,
       autoSchemaFile: 'types.gql',
       persistedQueries: false,
-      cache: "bounded"
+      cache: 'bounded',
     }),
     AuthModule,
   ],
@@ -69,7 +68,6 @@ import { UpdateItemAdminResolver } from './item/resolver/update-item-admin.resol
     ReadItemResolver,
     UpdateItemResolver,
     DeleteItemResolver,
-    UpdateItemAdminResolver,
   ],
 })
 export class DatabaseModule {}
