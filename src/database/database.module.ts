@@ -32,7 +32,7 @@ import { DeleteItemResolver } from './item/resolver/delete-item.resolver';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
-        schema: 'public',
+        schema: 'stock-db',
         entities: [UserEntity, ItemEntity],
         url: configService.get('DATABASE_URL'),
         synchronize:
