@@ -23,7 +23,13 @@ export class LogInResolver {
     const { email, password } = loginUser;
     const findOne = await this._userRepo.userRepo
       .createQueryBuilder('user')
-      .select(['user.id', 'user.username', 'user.email', 'user.password'])
+      .select([
+        'user.id',
+        'user.username',
+        'user.email',
+        'user.password',
+        'user.type',
+      ])
       .where('user.email = :email', { email })
       .getOne();
 
@@ -46,6 +52,7 @@ export class LogInResolver {
       token: this._authService.genJWT({
         id: findOne.id,
         name: findOne.username,
+        type: findOne.type,
       }),
     };
   }
