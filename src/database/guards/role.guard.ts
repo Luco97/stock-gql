@@ -27,7 +27,7 @@ export class RoleGuard implements CanActivate {
         .createQueryBuilder('user')
         .select(['user.id', 'user.type'])
         .where('user.id = :id_user', { id_user })
-        .andWhere('user.type IN :role', { roles })
+        .andWhere('user.type IN (:...roles)', { roles })
         .getCount(),
     ).pipe(map<number, boolean>((count) => (count ? true : false)));
   }
