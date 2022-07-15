@@ -51,8 +51,6 @@ type ChangeOutput {
 type Query {
   findAll(paginate: ReadInput): ItemsOutput!
   findOne(id: Float!): ItemEntity
-  findAllAdmin(paginate: ReadInput): ItemsOutput!
-  findOneAdmin(id: Float!): ItemEntity!
 }
 
 input ReadInput {
@@ -68,7 +66,6 @@ type Mutation {
   create(paginate: CreateInput): ItemEntity!
   update(item: UpdateInput!): ChangeOutput!
   delete(id_item: Float!): ChangeOutput!
-  updateAdmin(item: UpdateInput!): ChangeOutput!
 }
 
 input SignInInput {
