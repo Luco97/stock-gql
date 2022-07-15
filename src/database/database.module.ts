@@ -24,7 +24,6 @@ import { ReadItemResolver } from './item/resolver/read-item.resolver';
 import { CreateItemResolver } from './item/resolver/create-item.resolver';
 import { DeleteItemResolver } from './item/resolver/delete-item.resolver';
 import { UpdateItemResolver } from './item/resolver/update-item.resolver';
-import { ReadItemsAdminResolver } from './item/resolver/read-items-admin.resolver';
 import { UpdateItemAdminResolver } from './item/resolver/update-item-admin.resolver';
 
 @Module({
@@ -58,7 +57,6 @@ import { UpdateItemAdminResolver } from './item/resolver/update-item-admin.resol
     ReadItemResolver,
     UpdateItemResolver,
     DeleteItemResolver,
-    ReadItemsAdminResolver,
     UpdateItemAdminResolver,
   ],
 })
