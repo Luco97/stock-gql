@@ -22,7 +22,7 @@ export class ReadItemResolver {
   @SetMetadata('roles', ['basic', 'admin'])
   @UseGuards(RoleGuard)
   async findAll(
-    @Args('paginate', { nullable: true }) getInput: ReadInput,
+    @Args('paginate', { nullable: true, defaultValue: {} }) getInput: ReadInput,
     @Context() context,
   ): Promise<ItemsOutput> {
     const req: Request = context.req;
