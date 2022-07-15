@@ -1,9 +1,9 @@
 // Modules
 import { Module } from '@nestjs/common';
-import { ApolloDriver } from '@nestjs/apollo';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 
 import { AuthModule } from '../shared/auth/auth.module';
 
@@ -36,15 +36,27 @@ import { UpdateItemAdminResolver } from './item/resolver/update-item-admin.resol
         schema: 'public',
         entities: [UserEntity, ItemEntity],
         url: configService.get('DATABASE_URL'),
-        synchronize: true,
+        synchronize:
+          configService.get('NODE_ENV') != 'production' ? true : false,
         autoLoadEntities: true,
         logging: 'all',
+        extra:
+          configService.get('NODE_ENV') == 'production'
+            ? {
+                ssl: {
+                  sslmode: true,
+                  rejectUnauthorized: false,
+                },
+              }
+            : {},
       }),
     }),
     TypeOrmModule.forFeature([UserEntity, ItemEntity]),
-    GraphQLModule.forRoot({
+    GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: 'types.gql',
+      persistedQueries: false,
+      cache: "bounded"
     }),
     AuthModule,
   ],
