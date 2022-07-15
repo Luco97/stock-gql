@@ -49,12 +49,12 @@ type ChangeOutput {
 }
 
 type Query {
-  findAll(paginate: ReadInput): ItemsOutput!
+  findAll(paginate: ReadInput = {}): ItemsOutput!
   findOne(id: Float!): ItemEntity
 }
 
 input ReadInput {
-  take: Float = 3
+  take: Float = 10
   skip: Float = 0
   orderBy: String = "createdAt"
   order: String = "ASC"
