@@ -50,7 +50,7 @@ type ChangeOutput {
 
 type Query {
   findAll(paginate: ReadInput): ItemsOutput!
-  findOne(id: Float!): ItemEntity!
+  findOne(id: Float!): ItemEntity
   findAllAdmin(paginate: ReadInput): ItemsOutput!
   findOneAdmin(id: Float!): ItemEntity!
 }
@@ -58,6 +58,8 @@ type Query {
 input ReadInput {
   take: Float = 3
   skip: Float = 0
+  orderBy: String = "createdAt"
+  order: String = "ASC"
 }
 
 type Mutation {
