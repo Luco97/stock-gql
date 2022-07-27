@@ -22,9 +22,29 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+<p align="center">
+    <img src="https://cdn.discordapp.com/attachments/907296858970415144/1001666111827353650/stock-app-logo.png" title="fakin logo poco original" alt="logo de aplicacion" width="320">
+</p>
+<hr>
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Descripcion
+
+Proyecto para probar, aprender y utilizar GraphQL y despues comentarlo en alguna entrevista o que estos la vean.
+CRUD bastante basico, utilizando JWT para autenticar usuario y tipo, donde existen solo 2 roles:
+
+- Administrador, que puede ver productos de cualquier usuario basico y los productos propios del admin (Productos de Administradores solo pueden ser visto por sus creadores)
+- Basicos, usuario que puede borrar, actualizar y revisar sus productos propios.
+
+### Herramientas
+
+Algunas de las herramientas utilizadas son:
+
+- TypeORM para manipulacion de la base de datos
+- JWT como clave para autenticar usuarios
+- BCrypt para hash de contraseñas de usuarios
+- GraphQL para las consultas
+- class-validators para consultas tipadas
+
 
 ## Installation
 
