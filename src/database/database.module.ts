@@ -10,20 +10,25 @@ import { AuthModule } from '../shared/auth/auth.module';
 // Entities
 import { UserEntity } from './user/model/user-entity';
 import { ItemEntity } from './item/model/item-entity';
+import { HistoricEntity } from './historic/model/historic-entity';
 
 // Services
 import { ItemRepositoryService } from './item/repository/item-repository.service';
+import { UserRepositoryService } from './user/repository/user-repository.service';
+import { HistoricRepositoryService } from './historic/repository/historic-repository.service';
 
-// User respolvers
+// User resolvers
 import { LogInResolver } from './user/resolver/log-in.resolver';
 import { SignInResolver } from './user/resolver/sign-in.resolver';
-import { UserRepositoryService } from './user/repository/user-repository.service';
 
-// Items respolvers
+// Items resolvers
 import { CreateItemResolver } from './item/resolver/create-item.resolver';
 import { ReadItemResolver } from './item/resolver/read-item.resolver';
 import { UpdateItemResolver } from './item/resolver/update-item.resolver';
 import { DeleteItemResolver } from './item/resolver/delete-item.resolver';
+
+// Historic resolvers
+import { ReadHistoricResolver } from './historic/resolver/read-historic.resolver';
 
 @Module({
   imports: [
@@ -68,6 +73,8 @@ import { DeleteItemResolver } from './item/resolver/delete-item.resolver';
     ReadItemResolver,
     UpdateItemResolver,
     DeleteItemResolver,
+    HistoricRepositoryService,
+    ReadHistoricResolver,
   ],
 })
 export class DatabaseModule {}
