@@ -6,11 +6,13 @@ import {
   DeleteDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 import { UserEntity } from '../../user/model/user-entity';
+import { HistoricEntity } from '../../historic/model/historic-entity';
 
 @Entity()
 @ObjectType()
@@ -46,4 +48,8 @@ export class ItemEntity {
   @Field(() => UserEntity, { nullable: true })
   @ManyToOne(() => UserEntity, (user) => user.items)
   user: UserEntity;
+
+  // @Field(() => HistoricEntity, { nullable: true })
+  @OneToMany(() => HistoricEntity, (changes) => changes.item)
+  changes: HistoricEntity[];
 }
