@@ -37,7 +37,7 @@ import { ReadHistoricResolver } from './historic/resolver/read-historic.resolver
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
-        schema: 'stock-db',
+        schema: configService.get('DATABASE_SCHEMA'),
         entities: [UserEntity, ItemEntity, HistoricEntity],
         url: configService.get('DATABASE_URL'),
         synchronize:
