@@ -2,6 +2,17 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type HistoricEntity {
+  id: ID!
+  change: String!
+  createdAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type ItemEntity {
   id: ID!
   name: String!
@@ -12,11 +23,6 @@ type ItemEntity {
   deletedAt: DateTime
   user: UserEntity
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 type UserEntity {
   id: ID!
@@ -48,9 +54,15 @@ type ChangeOutput {
   item: ItemEntity
 }
 
+type HistoricOutput {
+  changes: [HistoricEntity!]!
+  count: Float!
+}
+
 type Query {
   findAll(paginate: ReadInput = {}): ItemsOutput!
   findOne(id: Float!): ItemEntity
+  changes(itemId: ChangesReadInput!): HistoricOutput!
 }
 
 input ReadInput {
@@ -58,6 +70,11 @@ input ReadInput {
   skip: Float = 0
   orderBy: String = "createdAt"
   order: String = "ASC"
+}
+
+input ChangesReadInput {
+  itemId: Float!
+  order: String = "DESC"
 }
 
 type Mutation {
