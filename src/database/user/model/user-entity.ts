@@ -1,10 +1,10 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 
 import {
-  BeforeInsert,
   Column,
   Entity,
   OneToMany,
+  BeforeInsert,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { genSalt, hash } from 'bcrypt';

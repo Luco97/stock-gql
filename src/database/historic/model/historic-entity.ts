@@ -2,9 +2,9 @@ import { Field, ID, ObjectType } from '@nestjs/graphql';
 
 import {
     Column,
-    CreateDateColumn,
     Entity,
     ManyToOne,
+    CreateDateColumn,
     PrimaryGeneratedColumn,
 } from 'typeorm';
 
