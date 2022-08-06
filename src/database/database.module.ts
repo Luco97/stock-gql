@@ -38,7 +38,7 @@ import { ReadHistoricResolver } from './historic/resolver/read-historic.resolver
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
         schema: 'stock-db',
-        entities: [UserEntity, ItemEntity],
+        entities: [UserEntity, ItemEntity, HistoricEntity],
         url: configService.get('DATABASE_URL'),
         synchronize:
           configService.get('NODE_ENV') != 'production' ? true : false,
@@ -55,7 +55,7 @@ import { ReadHistoricResolver } from './historic/resolver/read-historic.resolver
             : {},
       }),
     }),
-    TypeOrmModule.forFeature([UserEntity, ItemEntity]),
+    TypeOrmModule.forFeature([UserEntity, ItemEntity, HistoricEntity]),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: 'types.gql',
