@@ -1,5 +1,5 @@
-import { Args, Context, Query, Resolver } from '@nestjs/graphql';
 import { SetMetadata, UseGuards } from '@nestjs/common';
+import { Args, Context, Query, Resolver } from '@nestjs/graphql';
 
 import { Request } from 'express';
 import { Brackets } from 'typeorm';
