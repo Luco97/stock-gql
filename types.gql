@@ -92,7 +92,10 @@ input SignInInput {
 }
 
 input LogInInput {
+  """email of user to log in"""
   email: String!
+
+  """password of the user"""
   password: String!
 }
 
