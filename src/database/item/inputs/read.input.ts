@@ -1,6 +1,7 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { ArgsType, Field, InputType } from '@nestjs/graphql';
 
 @InputType()
+// @ArgsType() // No funciona como dice la documentacion, seguir usando InputType
 export class ReadInput {
   @Field(() => Number, { nullable: true, defaultValue: 10 })
   take: number;
