@@ -7,8 +7,8 @@ import { Brackets } from 'typeorm';
 import { AuthService } from '@Shared/auth';
 import { ReadInput } from '../inputs/read.input';
 import { ItemEntity } from '../model/item-entity';
-import { ItemsOutput } from '../outputs/items.output';
 import { RoleGuard } from '../../guards/role.guard';
+import { ItemsOutput } from '../outputs/items.output';
 import { ItemRepositoryService } from '../repository/item-repository.service';
 
 @Resolver()
