@@ -66,14 +66,24 @@ type Query {
 }
 
 input ReadInput {
+  """quantity of items"""
   take: Float = 10
+
+  """number of items to skip"""
   skip: Float = 0
+
+  """field selected for order"""
   orderBy: String = "createdAt"
+
+  """if is ASCendent or DESCendent"""
   order: String = "ASC"
 }
 
 input ChangesReadInput {
+  """ID of item"""
   itemId: Float!
+
+  """if is ASCendent or DESCendent"""
   order: String = "DESC"
 }
 
@@ -86,8 +96,13 @@ type Mutation {
 }
 
 input SignInInput {
+  """email for the new user"""
   email: String!
+
+  """username for the new user"""
   username: String!
+
+  """password for the user"""
   password: String!
 }
 
