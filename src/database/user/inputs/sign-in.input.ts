@@ -4,14 +4,14 @@ import { UserEntity } from '../model/user-entity';
 
 @InputType()
 export class SignInInput implements Partial<UserEntity> {
-  @Field(() => String)
+  @Field(() => String, { description: 'email for the new user' })
   @IsEmail()
   email: string;
 
-  @Field(() => String)
+  @Field(() => String, { description: 'username for the new user' })
   @MinLength(5)
   username: string;
 
-  @Field(() => String)
+  @Field(() => String, { description: 'password for the user' })
   password: string;
 }
