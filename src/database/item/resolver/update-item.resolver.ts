@@ -71,7 +71,10 @@ export class UpdateItemResolver {
     const req: Request = context.req;
     const token: string = req.headers?.authorization;
     const type: string = this._authService.userType(token);
-    const { id_item, imageUrl, name, stock } = itemUpdate;
+    const {
+      id_item,
+      // , imageUrl, name, stock
+    } = itemUpdate;
     let item: ItemEntity;
     if (type == 'basic')
       item = await this._itemService.itemRepo
@@ -111,9 +114,9 @@ export class UpdateItemResolver {
     if (!item) return { message: `item with id = ${id_item} doesn't exist` };
     const updateItem = await this._itemService.itemRepo.save({
       id: item.id,
-      name: name || item.name,
-      stock: stock || item.stock,
-      imageUrl: imageUrl || item.imageUrl,
+      // name: name || item.name,
+      // stock: stock || item.stock,
+      // imageUrl: imageUrl || item.imageUrl,
     });
     return { message: 'updated item', item: updateItem };
   }
