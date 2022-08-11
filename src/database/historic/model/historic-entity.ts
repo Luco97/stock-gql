@@ -1,11 +1,11 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 
 import {
-    Column,
-    Entity,
-    ManyToOne,
-    CreateDateColumn,
-    PrimaryGeneratedColumn,
+  Column,
+  Entity,
+  ManyToOne,
+  CreateDateColumn,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 
 import { ItemEntity } from '../../item/model/item-entity';
@@ -21,11 +21,15 @@ export class HistoricEntity {
   @Column({ type: 'varchar' })
   change: string;
 
+  @Field(() => String)
+  @Column({ type: 'varchar', nullable: true })
+  previousValue: string;
+
   @Field(() => Date)
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 
-//   @Field(() => ItemEntity, { nullable: true })
+  //   @Field(() => ItemEntity, { nullable: true })
   @ManyToOne(() => ItemEntity, (item) => item.changes)
   item: ItemEntity;
 }
