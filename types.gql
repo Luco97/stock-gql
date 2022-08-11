@@ -5,6 +5,7 @@
 type HistoricEntity {
   id: ID!
   change: String!
+  previousValue: String!
   createdAt: DateTime!
 }
 
@@ -91,7 +92,7 @@ type Mutation {
   signIn(user: SignInInput!): SignInOutput!
   logIn(user: LogInInput!): LogInOutput!
   create(paginate: CreateInput): ItemEntity!
-  update(item: UpdateInput!): ChangeOutput!
+  updateName(item: UpdateNameInput!): ChangeOutput!
   delete(id_item: Float!): ChangeOutput!
 }
 
@@ -120,9 +121,7 @@ input CreateInput {
   stock: Float!
 }
 
-input UpdateInput {
+input UpdateNameInput {
   id_item: Float!
-  name: String
-  imageUrl: String
-  stock: Float
+  name: String!
 }
