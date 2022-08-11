@@ -28,8 +28,9 @@ export class UpdateInput {
   @Min(1)
   id_item: number;
 }
+@InputType()
 export class UpdateNameInput extends UpdateInput {
-  @Field(() => String, { nullable: true })
+  @Field(() => String)
   @IsOptional()
   @MinLength(5)
   name: string;
