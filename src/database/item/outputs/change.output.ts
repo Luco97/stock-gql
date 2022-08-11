@@ -1,4 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
+import { DeepPartial } from 'typeorm';
 
 import { ItemEntity } from '../model/item-entity';
 
@@ -8,5 +9,5 @@ export class ChangeOutput {
   message: string;
 
   @Field(() => ItemEntity, { nullable: true })
-  item?: ItemEntity;
+  item?: DeepPartial<ItemEntity>;
 }
