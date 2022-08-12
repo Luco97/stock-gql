@@ -15,4 +15,8 @@ export class CreateInput implements Partial<ItemEntity> {
   @Field(() => Number)
   @Min(0)
   stock: number;
+
+  @Field(() => Number)
+  @Min(0)
+  price: number;
 }
