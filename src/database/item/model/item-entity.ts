@@ -29,6 +29,10 @@ export class ItemEntity {
   @Column({ type: 'int' })
   stock: number;
 
+  @Field(() => Number)
+  @Column({ type: 'decimal', default: 0 })
+  price: number;
+
   @Field(() => String, { nullable: true })
   @Column({ type: 'varchar', nullable: true })
   imageUrl: string;
