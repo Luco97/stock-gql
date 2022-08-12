@@ -25,13 +25,14 @@ export class CreateItemResolver {
     const req: Request = context.req;
     const token: string = req.headers?.authorization;
 
-    const { name, imageUrl, stock } = createInput;
+    const { name, imageUrl, stock, price } = createInput;
     const id_user = this._authService.userID(token);
     const item = await this._itemService.itemRepo.save(
       this._itemService.itemRepo.create({
         imageUrl,
         name,
         stock,
+        price,
       }),
     );
     await this._itemService.itemRepo
