@@ -166,8 +166,9 @@ export class UpdateItemResolver {
                       item: {
                         id: item.id,
                         stock: item.stock,
-                        createdAt: item.createdAt,
+                        price: item.price,
                         imageUrl: item.imageUrl,
+                        createdAt: item.createdAt,
                         // UPDATE elements
                         name: updatedItem.name,
                         updatedAt: updatedItem.updatedAt,
@@ -217,8 +218,9 @@ export class UpdateItemResolver {
                       item: {
                         id: item.id,
                         name: item.name,
-                        createdAt: item.createdAt,
+                        price: item.price,
                         imageUrl: item.imageUrl,
+                        createdAt: item.createdAt,
                         // UPDATE elements
                         stock: updatedItem.stock,
                         updatedAt: updatedItem.updatedAt,
