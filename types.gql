@@ -18,6 +18,7 @@ type ItemEntity {
   id: ID!
   name: String!
   stock: Float!
+  price: Float!
   imageUrl: String
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -93,6 +94,7 @@ type Mutation {
   logIn(user: LogInInput!): LogInOutput!
   create(paginate: CreateInput): ItemEntity!
   updateName(item: UpdateNameInput!): ChangeOutput!
+  updateStock(item: UpdateStockInput!): ChangeOutput!
   delete(id_item: Float!): ChangeOutput!
 }
 
@@ -119,9 +121,15 @@ input CreateInput {
   name: String!
   imageUrl: String!
   stock: Float!
+  price: Float!
 }
 
 input UpdateNameInput {
   id_item: Float!
   name: String!
+}
+
+input UpdateStockInput {
+  id_item: Float!
+  stock: Float!
 }
