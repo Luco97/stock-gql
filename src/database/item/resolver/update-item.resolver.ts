@@ -8,6 +8,7 @@ import {
   UpdateNameInput,
   UpdateStockInput,
   UpdateImageInput,
+  UpdatePriceInput,
 } from '../inputs/update.input';
 import { AuthService } from '@Shared/auth';
 import { ItemEntity } from '../model/item-entity';
@@ -167,8 +168,60 @@ export class UpdateItemResolver {
                         stock: item.stock,
                         createdAt: item.createdAt,
                         imageUrl: item.imageUrl,
-                        name: updatedItem.name, // UPDATE elements
-                        updatedAt: updatedItem.updatedAt, // UPDATE elements
+                        // UPDATE elements
+                        name: updatedItem.name,
+                        updatedAt: updatedItem.updatedAt,
+                      },
+                    });
+                  });
+              });
+          });
+      });
+    });
+  }
+
+  @Mutation(() => ChangeOutput)
+  @SetMetadata('roles', ['basic', 'admin'])
+  @UseGuards(RoleGuard)
+  async updateStock(
+    @Args('item') itemNameUpdate: UpdateStockInput,
+    @Context() context,
+  ): Promise<ChangeOutput> {
+    const { id_item, stock } = itemNameUpdate;
+    return new Promise<ChangeOutput>((resolve, reject) => {
+      this.getItem({ id_item }, context).then((item) => {
+        if (!item)
+          resolve({ message: `item with id = ${id_item} doesn't exist` });
+        this._itemService.itemRepo
+          .save({
+            id: item.id,
+            stock,
+          })
+          .then((updatedItem) => {
+            this._historicService.changeRepo
+              .save(
+                this._historicService.changeRepo.create({
+                  previousValue: `${item.stock}`,
+                  change: 'Stock',
+                }),
+              )
+              .then((change) => {
+                this._historicService.changeRepo
+                  .createQueryBuilder('change')
+                  .relation('item')
+                  .of(change.id)
+                  .set(item.id)
+                  .finally(() => {
+                    resolve({
+                      message: 'updated item',
+                      item: {
+                        id: item.id,
+                        name: item.name,
+                        createdAt: item.createdAt,
+                        imageUrl: item.imageUrl,
+                        // UPDATE elements
+                        stock: updatedItem.stock,
+                        updatedAt: updatedItem.updatedAt,
                       },
                     });
                   });
