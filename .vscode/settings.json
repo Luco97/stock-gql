@@ -1,9 +1,9 @@
 {
   "workbench.colorCustomizations": {
-    "statusBar.background": "#f59f00",
-    "statusBarItem.hoverBackground": "#f9c566",
-    "activityBar.foreground": "#000",
-    "statusBar.foreground": "#000",
-    "statusBar.border": "#000"
+    "statusBar.background": "#9c27b0",
+    "statusBarItem.hoverBackground": "#5e176a",
+    "activityBar.foreground": "#fff",
+    "statusBar.foreground": "#fff",
+    "statusBar.border": "#fff"
   }
 }
