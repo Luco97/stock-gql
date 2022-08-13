@@ -98,11 +98,12 @@ input ChangesReadInput {
 type Mutation {
   signIn(user: SignInInput!): SignInOutput!
   logIn(user: LogInInput!): LogInOutput!
-  create(paginate: CreateInput): ItemEntity!
+  createItem(paginate: CreateInput): ItemEntity!
   updateName(item: UpdateNameInput!): ChangeOutput!
   updateStock(item: UpdateStockInput!): ChangeOutput!
   updatePrice(item: UpdatePriceInput!): ChangeOutput!
-  delete(id_item: Float!): ChangeOutput!
+  updateImage(item: UpdateImageInput!): ChangeOutput!
+  deleteItem(id_item: Float!): ChangeOutput!
 }
 
 input SignInInput {
@@ -144,4 +145,9 @@ input UpdateStockInput {
 input UpdatePriceInput {
   id_item: Float!
   price: Float!
+}
+
+input UpdateImageInput {
+  id_item: Float!
+  imageUrl: String!
 }
