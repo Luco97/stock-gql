@@ -232,4 +232,56 @@ export class UpdateItemResolver {
       });
     });
   }
+
+  @Mutation(() => ChangeOutput)
+  @SetMetadata('roles', ['basic', 'admin'])
+  @UseGuards(RoleGuard)
+  async updatePrice(
+    @Args('item') itemNameUpdate: UpdatePriceInput,
+    @Context() context,
+  ): Promise<ChangeOutput> {
+    const { id_item, price } = itemNameUpdate;
+    return new Promise<ChangeOutput>((resolve, reject) => {
+      this.getItem({ id_item }, context).then((item) => {
+        if (!item)
+          resolve({ message: `item with id = ${id_item} doesn't exist` });
+        this._itemService.itemRepo
+          .save({
+            id: item.id,
+            price,
+          })
+          .then((updatedItem) => {
+            this._historicService.changeRepo
+              .save(
+                this._historicService.changeRepo.create({
+                  previousValue: `${item.price}`,
+                  change: 'Price',
+                }),
+              )
+              .then((change) => {
+                this._historicService.changeRepo
+                  .createQueryBuilder('change')
+                  .relation('item')
+                  .of(change.id)
+                  .set(item.id)
+                  .finally(() => {
+                    resolve({
+                      message: 'updated item',
+                      item: {
+                        id: item.id,
+                        name: item.name,
+                        stock: item.stock,
+                        imageUrl: item.imageUrl,
+                        createdAt: item.createdAt,
+                        // UPDATE elements
+                        price: updatedItem.price,
+                        updatedAt: updatedItem.updatedAt,
+                      },
+                    });
+                  });
+              });
+          });
+      });
+    });
+  }
 }
