@@ -8,6 +8,20 @@ export class ReadInput {
   @IsDefined()
   itemId: number;
 
+  @Field(() => Number, {
+    nullable: true,
+    defaultValue: 10,
+    description: 'quantity of changes',
+  })
+  take: number;
+
+  @Field(() => Number, {
+    nullable: true,
+    defaultValue: 0,
+    description: 'number of changes to skip',
+  })
+  skip: number;
+
   @Field(() => String, {
     defaultValue: 'DESC',
     description: 'if is ASCendent or DESCendent',

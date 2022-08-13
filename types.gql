@@ -85,6 +85,12 @@ input ChangesReadInput {
   """ID of item"""
   itemId: Float!
 
+  """quantity of changes"""
+  take: Float = 10
+
+  """number of changes to skip"""
+  skip: Float = 0
+
   """if is ASCendent or DESCendent"""
   order: String = "DESC"
 }
@@ -95,6 +101,7 @@ type Mutation {
   create(paginate: CreateInput): ItemEntity!
   updateName(item: UpdateNameInput!): ChangeOutput!
   updateStock(item: UpdateStockInput!): ChangeOutput!
+  updatePrice(item: UpdatePriceInput!): ChangeOutput!
   delete(id_item: Float!): ChangeOutput!
 }
 
@@ -132,4 +139,9 @@ input UpdateNameInput {
 input UpdateStockInput {
   id_item: Float!
   stock: Float!
+}
+
+input UpdatePriceInput {
+  id_item: Float!
+  price: Float!
 }
