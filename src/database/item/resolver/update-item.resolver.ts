@@ -1,3 +1,4 @@
+import { SetMetadata, UseGuards } from '@nestjs/common';
 import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
 
 import { Request } from 'express';
@@ -6,15 +7,14 @@ import { Brackets } from 'typeorm';
 import {
   UpdateInput,
   UpdateNameInput,
-  UpdateStockInput,
   UpdateImageInput,
   UpdatePriceInput,
+  UpdateStockInput,
 } from '../inputs/update.input';
 import { AuthService } from '@Shared/auth';
 import { ItemEntity } from '../model/item-entity';
 import { RoleGuard } from '../../guards/role.guard';
 import { ChangeOutput } from '../outputs/change.output';
-import { SetMetadata, UseGuards } from '@nestjs/common';
 import { ItemRepositoryService } from '../repository/item-repository.service';
 import { HistoricRepositoryService } from '../../historic/repository/historic-repository.service';
 
@@ -275,6 +275,58 @@ export class UpdateItemResolver {
                         createdAt: item.createdAt,
                         // UPDATE elements
                         price: updatedItem.price,
+                        updatedAt: updatedItem.updatedAt,
+                      },
+                    });
+                  });
+              });
+          });
+      });
+    });
+  }
+
+  @Mutation(() => ChangeOutput)
+  @SetMetadata('roles', ['basic', 'admin'])
+  @UseGuards(RoleGuard)
+  async updateImage(
+    @Args('item') itemNameUpdate: UpdateImageInput,
+    @Context() context,
+  ): Promise<ChangeOutput> {
+    const { id_item, imageUrl } = itemNameUpdate;
+    return new Promise<ChangeOutput>((resolve, reject) => {
+      this.getItem({ id_item }, context).then((item) => {
+        if (!item)
+          resolve({ message: `item with id = ${id_item} doesn't exist` });
+        this._itemService.itemRepo
+          .save({
+            id: item.id,
+            imageUrl,
+          })
+          .then((updatedItem) => {
+            this._historicService.changeRepo
+              .save(
+                this._historicService.changeRepo.create({
+                  previousValue: `${item.imageUrl}`,
+                  change: 'Image',
+                }),
+              )
+              .then((change) => {
+                this._historicService.changeRepo
+                  .createQueryBuilder('change')
+                  .relation('item')
+                  .of(change.id)
+                  .set(item.id)
+                  .finally(() => {
+                    resolve({
+                      message: 'updated item',
+                      item: {
+                        id: item.id,
+                        name: item.name,
+                        price: item.price,
+                        stock: item.stock,
+                        createdAt: item.createdAt,
+                        // UPDATE elements
+                        imageUrl: updatedItem.imageUrl,
                         updatedAt: updatedItem.updatedAt,
                       },
                     });
