@@ -27,19 +27,24 @@ export class CreateItemResolver {
 
     const { name, imageUrl, stock, price } = createInput;
     const id_user = this._authService.userID(token);
-    const item = await this._itemService.itemRepo.save(
-      this._itemService.itemRepo.create({
-        imageUrl,
-        name,
-        stock,
-        price,
-      }),
-    );
-    await this._itemService.itemRepo
-      .createQueryBuilder('item')
-      .relation('user')
-      .of(item.id)
-      .set(id_user);
-    return item;
+    return new Promise<ItemEntity>((resolve, reject) => {
+      this._itemService.itemRepo
+        .save(
+          this._itemService.itemRepo.create({
+            imageUrl,
+            name,
+            stock,
+            price,
+          }),
+        )
+        .then((newItem) => {
+          this._itemService.itemRepo
+            .createQueryBuilder('item')
+            .relation('user')
+            .of(newItem.id)
+            .set(id_user)
+            .then(() => resolve(newItem));
+        });
+    });
   }
 }
