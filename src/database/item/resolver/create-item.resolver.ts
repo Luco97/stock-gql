@@ -43,8 +43,10 @@ export class CreateItemResolver {
             .relation('user')
             .of(newItem.id)
             .set(id_user)
-            .then(() => resolve(newItem));
-        });
+            .then(() => resolve(newItem))
+            .catch((error) => reject(error));
+        })
+        .catch((error) => reject(error));
     });
   }
 }
