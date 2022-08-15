@@ -12,25 +12,34 @@ export class SignInResolver {
   @Mutation(() => SignInOutput)
   async signIn(@Args('user') createUser: SignInInput): Promise<SignInOutput> {
     const { email, password, username } = createUser;
-    const findOne = await this._userRepo.userRepo
-      .createQueryBuilder('user')
-      .where('user.email = :email', { email })
-      .orWhere('user.username = :username', { username })
-      .getCount();
-    if (findOne)
-      return { status: HttpStatus.CONFLICT, message: 'already exist' };
-    else {
-      const newUser = this._userRepo.userRepo.create({
-        email,
-        password,
-        username,
-        type: 'basic',
-      });
-      await this._userRepo.userRepo.save(newUser);
-      return {
-        status: HttpStatus.OK,
-        message: 'user created',
-      };
-    }
+    return new Promise<SignInOutput>((resolve, reject) =>
+      this._userRepo.userRepo
+        .createQueryBuilder('user')
+        .where('user.email = :email', { email })
+        .orWhere('user.username = :username', { username })
+        .getCount()
+        .then((user) => {
+          if (user)
+            resolve({ status: HttpStatus.CONFLICT, message: 'already exist' });
+          else
+            this._userRepo.userRepo
+              .save(
+                this._userRepo.userRepo.create({
+                  email,
+                  password,
+                  username,
+                  type: 'basic',
+                }),
+              )
+              .then(() =>
+                resolve({
+                  status: HttpStatus.OK,
+                  message: 'user created',
+                }),
+              )
+              .catch((error) => reject(error));
+        })
+        .catch((error) => reject(error)),
+    );
   }
 }
