@@ -21,39 +21,46 @@ export class LogInResolver {
     @Context() context,
   ): Promise<LogInOutput> {
     const { email, password } = loginUser;
-    const findOne = await this._userRepo.userRepo
-      .createQueryBuilder('user')
-      .select([
-        'user.id',
-        'user.username',
-        'user.email',
-        'user.password',
-        'user.type',
-      ])
-      .where('user.email = :email', { email })
-      .getOne();
-
-    if (!findOne)
-      return {
-        status: HttpStatus.NOT_FOUND,
-        message: `user doesn't exist`,
-        token: '',
-      };
-    const isValid = await compare(password, findOne.password);
-    if (!isValid)
-      return {
-        status: HttpStatus.NOT_FOUND,
-        message: `user doesn't exist`,
-        token: '',
-      };
-    return {
-      status: HttpStatus.OK,
-      message: 'user logged',
-      token: this._authService.genJWT({
-        id: findOne.id,
-        name: findOne.username,
-        type: findOne.type,
-      }),
-    };
+    return new Promise<LogInOutput>((resolve, reject) =>
+      this._userRepo.userRepo
+        .createQueryBuilder('user')
+        .select([
+          'user.id',
+          'user.username',
+          'user.email',
+          'user.password',
+          'user.type',
+        ])
+        .where('user.email = :email', { email })
+        .getOne()
+        .then((user) => {
+          if (!user)
+            resolve({
+              status: HttpStatus.NOT_FOUND,
+              message: `user doesn't exist`,
+              token: '',
+            });
+          compare(password, user.password)
+            .then((isValid) => {
+              if (!isValid)
+                return resolve({
+                  status: HttpStatus.NOT_FOUND,
+                  message: `user doesn't exist`,
+                  token: '',
+                });
+              resolve({
+                status: HttpStatus.OK,
+                message: 'user logged',
+                token: this._authService.genJWT({
+                  id: user.id,
+                  name: user.username,
+                  type: user.type,
+                }),
+              });
+            })
+            .catch((error) => reject(error));
+        })
+        .catch((error) => reject(error)),
+    );
   }
 }
