@@ -68,7 +68,7 @@ export class ReadItemResolver {
           .take(take || 10)
           .skip(skip * take || 0)
           .getManyAndCount();
-      itemsPromise
+      return itemsPromise
         .then(([items, count]) => resolve({ items, count }))
         .catch((error) => reject(error));
     });
