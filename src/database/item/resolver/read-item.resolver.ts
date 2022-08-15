@@ -29,46 +29,49 @@ export class ReadItemResolver {
     const token: string = req.headers?.authorization;
     const type: string = this._authService.userType(token);
     const { order, orderBy, skip, take } = getInput;
-    if (type == 'basic') {
-      const [items, count] = await this._itemService.itemRepo
-        .createQueryBuilder('items')
-        .leftJoin('items.user', 'user')
-        .where('user.id = :id_user', {
-          id_user: this._authService.userID(token),
-        })
-        .orderBy(
-          `items.${
-            ['name', 'stock', 'createdAt', 'updateAt'].includes(orderBy)
-              ? orderBy
-              : 'createdAt'
-          }`,
-          ['ASC', 'DESC'].includes(order) ? order : 'ASC',
-        )
-        .take(take || 10)
-        .skip(skip * take || 0)
-        .getManyAndCount();
-      return { items, count };
-    } else {
-      const [items, count] = await this._itemService.itemRepo
-        .createQueryBuilder('items')
-        .leftJoinAndSelect('items.user', 'user')
-        .where('user.type = :type', { type: 'basic' })
-        .orWhere('user.id = :id_user', {
-          id_user: this._authService.userID(token),
-        })
-        .orderBy(
-          `items.${
-            ['name', 'stock', 'createdAt', 'updateAt'].includes(orderBy)
-              ? orderBy
-              : 'createdAt'
-          }`,
-          ['ASC', 'DESC'].includes(order) ? order : 'ASC',
-        )
-        .take(take || 10)
-        .skip(skip * take || 0)
-        .getManyAndCount();
-      return { items, count };
-    }
+    return new Promise<ItemsOutput>((resolve, reject) => {
+      let itemsPromise: Promise<[ItemEntity[], number]>;
+      if (type == 'basic')
+        itemsPromise = this._itemService.itemRepo
+          .createQueryBuilder('items')
+          .leftJoin('items.user', 'user')
+          .where('user.id = :id_user', {
+            id_user: this._authService.userID(token),
+          })
+          .orderBy(
+            `items.${
+              ['name', 'stock', 'createdAt', 'updateAt'].includes(orderBy)
+                ? orderBy
+                : 'createdAt'
+            }`,
+            ['ASC', 'DESC'].includes(order) ? order : 'ASC',
+          )
+          .take(take || 10)
+          .skip(skip * take || 0)
+          .getManyAndCount();
+      else
+        itemsPromise = this._itemService.itemRepo
+          .createQueryBuilder('items')
+          .leftJoinAndSelect('items.user', 'user')
+          .where('user.type = :type', { type: 'basic' })
+          .orWhere('user.id = :id_user', {
+            id_user: this._authService.userID(token),
+          })
+          .orderBy(
+            `items.${
+              ['name', 'stock', 'createdAt', 'updateAt'].includes(orderBy)
+                ? orderBy
+                : 'createdAt'
+            }`,
+            ['ASC', 'DESC'].includes(order) ? order : 'ASC',
+          )
+          .take(take || 10)
+          .skip(skip * take || 0)
+          .getManyAndCount();
+      itemsPromise
+        .then(([items, count]) => resolve({ items, count }))
+        .catch((error) => reject(error));
+    });
   }
 
   @Query(() => ItemEntity, { nullable: true })
