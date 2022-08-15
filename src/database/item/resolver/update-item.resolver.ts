@@ -69,66 +69,6 @@ export class UpdateItemResolver {
     return item;
   }
 
-  // @Mutation(() => ChangeOutput)
-  // @SetMetadata('roles', ['basic', 'admin'])
-  // @UseGuards(RoleGuard)
-  // async update(
-  //   @Args('item') itemUpdate: UpdateInput,
-  //   @Context() context,
-  // ): Promise<ChangeOutput> {
-  //   const req: Request = context.req;
-  //   const token: string = req.headers?.authorization;
-  //   const type: string = this._authService.userType(token);
-  //   const {
-  //     id_item,
-  //     // , imageUrl, name, stock
-  //   } = itemUpdate;
-  //   let item: ItemEntity;
-  //   if (type == 'basic')
-  //     item = await this._itemService.itemRepo
-  //       .createQueryBuilder('item')
-  //       .leftJoin('item.user', 'user')
-  //       .where('item.id = :id_item', { id_item })
-  //       .andWhere('user.id = :id_user', {
-  //         id_user: this._authService.userID(token),
-  //       })
-  //       .getOne();
-  //   else
-  //     item = await this._itemService.itemRepo
-  //       .createQueryBuilder('item')
-  //       .leftJoin('item.user', 'user')
-  //       .where(
-  //         // Item propio del admin
-  //         new Brackets((qb) =>
-  //           qb
-  //             .where('item.id = :id_item', { id_item })
-  //             .andWhere('user.id = :id_user', {
-  //               id_user: this._authService.userID(token),
-  //             }),
-  //         ),
-  //       )
-  //       .orWhere(
-  //         // Item de un usario basic
-  //         new Brackets((qb) =>
-  //           qb
-  //             .where('item.id = :id_item', { id_item })
-  //             .andWhere('user.type = :type', {
-  //               type: 'basic',
-  //             }),
-  //         ),
-  //       )
-  //       .getOne();
-
-  //   if (!item) return { message: `item with id = ${id_item} doesn't exist` };
-  //   const updateItem = await this._itemService.itemRepo.save({
-  //     id: item.id,
-  //     // name: name || item.name,
-  //     // stock: stock || item.stock,
-  //     // imageUrl: imageUrl || item.imageUrl,
-  //   });
-  //   return { message: 'updated item', item: updateItem };
-  // }
-
   @Mutation(() => ChangeOutput)
   @SetMetadata('roles', ['basic', 'admin'])
   @UseGuards(RoleGuard)
