@@ -42,7 +42,14 @@ export class UserEntity {
   async hashPass() {
     if (!this.password) return;
     const saltRound: number = 10;
-    const bcSaltRound: string = await genSalt(saltRound);
-    this.password = await hash(this.password, bcSaltRound);
+    return new Promise((resolve, reject) =>
+      genSalt(saltRound)
+        .then((bcSaltRound) =>
+          hash(this.password, bcSaltRound)
+            .then((hashPass) => resolve((this.password = hashPass)))
+            .catch((error) => reject(error)),
+        )
+        .catch((error) => reject(error)),
+    );
   }
 }
