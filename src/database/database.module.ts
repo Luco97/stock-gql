@@ -59,8 +59,8 @@ import { ReadHistoricResolver } from './historic/resolver/read-historic.resolver
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: 'types.gql',
-      persistedQueries: false,
-      cache: 'bounded',
+      persistedQueries: false,  // heroku deploy
+      cache: 'bounded',         // heroku deploy
     }),
     AuthModule,
   ],
