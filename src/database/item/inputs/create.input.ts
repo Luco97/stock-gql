@@ -4,19 +4,23 @@ import { ItemEntity } from '../model/item-entity';
 
 @InputType()
 export class CreateInput implements Partial<ItemEntity> {
-  @Field(() => String)
+  @Field(() => String, { description: 'Name of the item' })
   @IsDefined()
   @MinLength(5)
   name: string;
 
-  @Field(() => String)
+  @Field(() => String, {
+    description: 'image URL of the item',
+    defaultValue:
+      'https://www.yiwubazaar.com/resources/assets/images/default-product.jpg',
+  })
   imageUrl: string;
 
-  @Field(() => Number)
+  @Field(() => Number, { description: 'Stock of the item', defaultValue: 0 })
   @Min(0)
   stock: number;
 
-  @Field(() => Number)
+  @Field(() => Number, { description: 'Price of the item', defaultValue: 0 })
   @Min(0)
   price: number;
 }
