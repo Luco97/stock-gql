@@ -126,10 +126,17 @@ input LogInInput {
 }
 
 input CreateInput {
+  """Name of the item"""
   name: String!
-  imageUrl: String!
-  stock: Float!
-  price: Float!
+
+  """image URL of the item"""
+  imageUrl: String = "https://www.yiwubazaar.com/resources/assets/images/default-product.jpg"
+
+  """Stock of the item"""
+  stock: Float = 0
+
+  """Price of the item"""
+  price: Float = 0
 }
 
 input UpdateNameInput {
