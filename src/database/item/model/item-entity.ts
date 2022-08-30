@@ -17,31 +17,31 @@ import { HistoricEntity } from '../../historic/model/historic-entity';
 @Entity()
 @ObjectType()
 export class ItemEntity {
-  @Field(() => ID)
+  @Field(() => ID, { description: 'item ID' })
   @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @Field(() => String)
+  @Field(() => String, { description: 'item name' })
   @Column({ type: 'varchar' })
   name: string;
 
-  @Field(() => Number)
+  @Field(() => Number, { description: 'item stock' })
   @Column({ type: 'int' })
   stock: number;
 
-  @Field(() => Number)
+  @Field(() => Number, { description: 'item price' })
   @Column({ type: 'decimal', default: 0 })
   price: number;
 
-  @Field(() => String, { nullable: true })
+  @Field(() => String, { nullable: true, description: 'item image URL' })
   @Column({ type: 'varchar', nullable: true })
   imageUrl: string;
 
-  @Field(() => Date)
+  @Field(() => Date, { description: 'item creation date' })
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 
-  @Field(() => Date)
+  @Field(() => Date, { description: 'item latest update' })
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
 
@@ -49,7 +49,11 @@ export class ItemEntity {
   @DeleteDateColumn({ type: 'timestamp' })
   deletedAt: Date;
 
-  @Field(() => UserEntity, { nullable: true })
+  @Field(() => UserEntity, {
+    nullable: true,
+    defaultValue: null,
+    description: 'user item owner',
+  })
   @ManyToOne(() => UserEntity, (user) => user.items)
   user: UserEntity;
 
