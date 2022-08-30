@@ -13,23 +13,23 @@ import { ItemEntity } from '../../item/model/item-entity';
 @Entity()
 @ObjectType()
 export class HistoricEntity {
-  @Field(() => ID)
+  @Field(() => ID, { description: 'historic register ID' })
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Field(() => String)
+  @Field(() => String, { description: 'change field of item' })
   @Column({ type: 'varchar' })
   change: string;
 
-  @Field(() => String)
+  @Field(() => String, { description: 'value before change' })
   @Column({ type: 'varchar', nullable: true })
   previousValue: string;
 
-  @Field(() => Date)
+  @Field(() => Date, { description: 'when change occurs' })
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 
-  //   @Field(() => ItemEntity, { nullable: true })
+  // @Field(() => ItemEntity, { nullable: true })
   @ManyToOne(() => ItemEntity, (item) => item.changes)
   item: ItemEntity;
 }
