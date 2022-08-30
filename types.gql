@@ -3,9 +3,16 @@
 # ------------------------------------------------------
 
 type HistoricEntity {
+  """historic register ID"""
   id: ID!
+
+  """change field of item"""
   change: String!
+
+  """value before change"""
   previousValue: String!
+
+  """when change occurs"""
   createdAt: DateTime!
 }
 
@@ -15,14 +22,29 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 type ItemEntity {
+  """item ID"""
   id: ID!
+
+  """item name"""
   name: String!
+
+  """item stock"""
   stock: Float!
+
+  """item price"""
   price: Float!
+
+  """item image URL"""
   imageUrl: String
+
+  """item creation date"""
   createdAt: DateTime!
+
+  """item latest update"""
   updatedAt: DateTime!
   deletedAt: DateTime
+
+  """user item owner"""
   user: UserEntity
 }
 
