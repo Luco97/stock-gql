@@ -79,13 +79,18 @@ type ChangeOutput {
 }
 
 type HistoricOutput {
+  """array of changes in item"""
   changes: [HistoricEntity!]!
+
+  """quantity of changes in item"""
   count: Float!
 }
 
 type Query {
   findAll(paginate: ReadInput = {}): ItemsOutput!
   findOne(id: Float!): ItemEntity
+
+  """find All changes of one item where id == 'itemId' """
   changes(itemId: ChangesReadInput!): HistoricOutput!
 }
 
@@ -118,7 +123,10 @@ input ChangesReadInput {
 }
 
 type Mutation {
+  """user register mutation"""
   signIn(user: SignInInput!): SignInOutput!
+
+  """user logIn mutation"""
   logIn(user: LogInInput!): LogInOutput!
   createItem(paginate: CreateInput): ItemEntity!
   updateName(item: UpdateNameInput!): ChangeOutput!
