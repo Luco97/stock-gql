@@ -15,7 +15,7 @@ export class LogInResolver {
     private _userRepo: UserRepositoryService,
   ) {}
 
-  @Mutation(() => LogInOutput)
+  @Mutation(() => LogInOutput, { description: 'user logIn mutation' })
   async logIn(@Args('user') loginUser: LogInInput): Promise<LogInOutput> {
     const { email, password } = loginUser;
     return new Promise<LogInOutput>((resolve, reject) =>
