@@ -17,7 +17,9 @@ export class ReadHistoricResolver {
     private _historicRepo: HistoricRepositoryService,
   ) {}
 
-  @Query(() => HistoricOutput)
+  @Query(() => HistoricOutput, {
+    description: "find All changes of one item where id == 'itemId' ",
+  })
   @SetMetadata('roles', ['basic', 'admin'])
   @UseGuards(RoleGuard)
   async changes(@Args('itemId') getInput: ReadInput, @Context() context) {
@@ -49,14 +51,15 @@ export class ReadHistoricResolver {
         .leftJoin('item.user', 'user')
         .where('item.id = :itemId', { itemId })
         .andWhere(
-            new Brackets((qb) =>
-              qb
-                .where('user.type = :type', { type: 'basic' })  // changes from normal user
-                .orWhere('user.id = :id_user', {                // OR changes from actual admin user
-                  id_user: this._authService.userID(token),
-                }),
-            ),
-          )
+          new Brackets((qb) =>
+            qb
+              .where('user.type = :type', { type: 'basic' }) // changes from normal user
+              .orWhere('user.id = :id_user', {
+                // OR changes from actual admin user
+                id_user: this._authService.userID(token),
+              }),
+          ),
+        )
         .orderBy(
           'changes.createdAt',
           ['ASC', 'DESC'].includes(order) ? order : 'ASC',
