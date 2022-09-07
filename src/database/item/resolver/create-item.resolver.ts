@@ -16,7 +16,10 @@ export class CreateItemResolver {
     private _itemService: ItemRepositoryService,
   ) {}
 
-  @Mutation(() => ItemEntity, { name: 'createItem' })
+  @Mutation(() => ItemEntity, {
+    name: 'create_item',
+    description: 'mutation for item creation',
+  })
   @UseGuards(AuthGuard)
   async create(
     @Args('paginate', { nullable: true }) createInput: CreateInput,
