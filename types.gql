@@ -87,8 +87,17 @@ type HistoricOutput {
 }
 
 type Query {
-  findAll(paginate: ReadInput = {}): ItemsOutput!
-  findOne(id: Float!): ItemEntity
+  findAll(
+    """
+    find all items, if user role is 'basic' response with his items, if user role is 'admin' response with all items from 'basic' users and his items
+    """
+    paginate: ReadInput = {}
+  ): ItemsOutput!
+
+  """
+  find one item, if user role is 'basic' response with his item, if user role is 'admin' response with one item from 'basic' users OR his item
+  """
+  find_one_item(id: Float!): ItemEntity
 
   """find All changes of one item where id == 'itemId' """
   changes(itemId: ChangesReadInput!): HistoricOutput!
@@ -128,12 +137,24 @@ type Mutation {
 
   """user logIn mutation"""
   logIn(user: LogInInput!): LogInOutput!
-  createItem(paginate: CreateInput): ItemEntity!
-  updateName(item: UpdateNameInput!): ChangeOutput!
-  updateStock(item: UpdateStockInput!): ChangeOutput!
-  updatePrice(item: UpdatePriceInput!): ChangeOutput!
-  updateImage(item: UpdateImageInput!): ChangeOutput!
-  deleteItem(id_item: Float!): ChangeOutput!
+
+  """mutation for item creation"""
+  create_item(paginate: CreateInput): ItemEntity!
+
+  """update name of item mutation"""
+  update_name_item(item: UpdateNameInput!): ChangeOutput!
+
+  """update stock of one item mutation"""
+  update_stock_item(item: UpdateStockInput!): ChangeOutput!
+
+  """update price of one item"""
+  update_price_item(item: UpdatePriceInput!): ChangeOutput!
+
+  """update the image of one item"""
+  update_image_item(item: UpdateImageInput!): ChangeOutput!
+
+  """delete item mutation, only role 'admin' can delete items"""
+  delete_item(id_item: Float!): ChangeOutput!
 }
 
 input SignInInput {
