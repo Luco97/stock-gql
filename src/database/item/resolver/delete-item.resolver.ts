@@ -9,7 +9,10 @@ import { ItemRepositoryService } from '../repository/item-repository.service';
 export class DeleteItemResolver {
   constructor(private _itemService: ItemRepositoryService) {}
 
-  @Mutation(() => ChangeOutput, { name: 'deleteItem' })
+  @Mutation(() => ChangeOutput, {
+    name: 'delete_item',
+    description: "delete item mutation, only role 'admin' can delete items",
+  })
   @SetMetadata('roles', ['admin'])
   @UseGuards(RoleGuard)
   async delete(
