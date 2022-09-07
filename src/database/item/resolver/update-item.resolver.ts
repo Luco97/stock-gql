@@ -26,50 +26,10 @@ export class UpdateItemResolver {
     private _historicService: HistoricRepositoryService,
   ) {}
 
-  async getItem(itemUpdate: UpdateInput, context): Promise<ItemEntity> {
-    const req: Request = context.req;
-    const token: string = req.headers?.authorization;
-    const type: string = this._authService.userType(token);
-    const { id_item } = itemUpdate;
-    let item: Promise<ItemEntity>;
-    if (type == 'basic')
-      item = this._itemService.itemRepo
-        .createQueryBuilder('item')
-        .leftJoin('item.user', 'user')
-        .where('item.id = :id_item', { id_item })
-        .andWhere('user.id = :id_user', {
-          id_user: this._authService.userID(token),
-        })
-        .getOne();
-    else
-      item = this._itemService.itemRepo
-        .createQueryBuilder('item')
-        .leftJoin('item.user', 'user')
-        .where(
-          // Item propio del admin
-          new Brackets((qb) =>
-            qb
-              .where('item.id = :id_item', { id_item })
-              .andWhere('user.id = :id_user', {
-                id_user: this._authService.userID(token),
-              }),
-          ),
-        )
-        .orWhere(
-          // Item de un usario basic
-          new Brackets((qb) =>
-            qb
-              .where('item.id = :id_item', { id_item })
-              .andWhere('user.type = :type', {
-                type: 'basic',
-              }),
-          ),
-        )
-        .getOne();
-    return item;
-  }
-
-  @Mutation(() => ChangeOutput)
+  @Mutation(() => ChangeOutput, {
+    name: 'update_name_item',
+    description: 'update name of item mutation',
+  })
   @SetMetadata('roles', ['basic', 'admin'])
   @UseGuards(RoleGuard)
   async updateName(
@@ -121,7 +81,10 @@ export class UpdateItemResolver {
     });
   }
 
-  @Mutation(() => ChangeOutput)
+  @Mutation(() => ChangeOutput, {
+    name: 'update_stock_item',
+    description: 'update stock of one item mutation',
+  })
   @SetMetadata('roles', ['basic', 'admin'])
   @UseGuards(RoleGuard)
   async updateStock(
@@ -173,7 +136,10 @@ export class UpdateItemResolver {
     });
   }
 
-  @Mutation(() => ChangeOutput)
+  @Mutation(() => ChangeOutput, {
+    name: 'update_price_item',
+    description: 'update price of one item',
+  })
   @SetMetadata('roles', ['basic', 'admin'])
   @UseGuards(RoleGuard)
   async updatePrice(
@@ -225,7 +191,10 @@ export class UpdateItemResolver {
     });
   }
 
-  @Mutation(() => ChangeOutput)
+  @Mutation(() => ChangeOutput, {
+    name: 'update_image_item',
+    description: 'update the image of one item',
+  })
   @SetMetadata('roles', ['basic', 'admin'])
   @UseGuards(RoleGuard)
   async updateImage(
@@ -275,5 +244,48 @@ export class UpdateItemResolver {
           });
       });
     });
+  }
+
+  async getItem(itemUpdate: UpdateInput, context): Promise<ItemEntity> {
+    const req: Request = context.req;
+    const token: string = req.headers?.authorization;
+    const type: string = this._authService.userType(token);
+    const { id_item } = itemUpdate;
+    let item: Promise<ItemEntity>;
+    if (type == 'basic')
+      item = this._itemService.itemRepo
+        .createQueryBuilder('item')
+        .leftJoin('item.user', 'user')
+        .where('item.id = :id_item', { id_item })
+        .andWhere('user.id = :id_user', {
+          id_user: this._authService.userID(token),
+        })
+        .getOne();
+    else
+      item = this._itemService.itemRepo
+        .createQueryBuilder('item')
+        .leftJoin('item.user', 'user')
+        .where(
+          // Item propio del admin
+          new Brackets((qb) =>
+            qb
+              .where('item.id = :id_item', { id_item })
+              .andWhere('user.id = :id_user', {
+                id_user: this._authService.userID(token),
+              }),
+          ),
+        )
+        .orWhere(
+          // Item de un usario basic
+          new Brackets((qb) =>
+            qb
+              .where('item.id = :id_item', { id_item })
+              .andWhere('user.type = :type', {
+                type: 'basic',
+              }),
+          ),
+        )
+        .getOne();
+    return item;
   }
 }
