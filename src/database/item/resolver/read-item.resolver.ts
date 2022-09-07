@@ -22,7 +22,14 @@ export class ReadItemResolver {
   @SetMetadata('roles', ['basic', 'admin'])
   @UseGuards(RoleGuard)
   async findAll(
-    @Args('paginate', { nullable: true, defaultValue: {} }) getInput: ReadInput,
+    @Args('paginate', {
+      nullable: true,
+      defaultValue: {},
+      name: 'find_all_items',
+      description:
+        "find all items, if user role is 'basic' response with his items, if user role is 'admin' response with all items from 'basic' users and his items",
+    })
+    getInput: ReadInput,
     @Context() context,
   ): Promise<ItemsOutput> {
     const req: Request = context.req;
@@ -74,7 +81,12 @@ export class ReadItemResolver {
     });
   }
 
-  @Query(() => ItemEntity, { nullable: true })
+  @Query(() => ItemEntity, {
+    nullable: true,
+    name: 'find_one_item',
+    description:
+      "find one item, if user role is 'basic' response with his item, if user role is 'admin' response with one item from 'basic' users OR his item",
+  })
   @SetMetadata('roles', ['basic', 'admin'])
   @UseGuards(RoleGuard)
   async findOne(
