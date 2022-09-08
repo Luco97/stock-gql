@@ -47,7 +47,8 @@ export class DeleteItemResolver {
           this._itemService.itemRepo
             .softDelete(id)
             .then(() => resolve({ message: 'soft deleted item', item }));
-        });
+        })
+        .catch((error) => reject(error));
     });
   }
 }
