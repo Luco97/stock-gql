@@ -38,46 +38,50 @@ export class UpdateItemResolver {
   ): Promise<ChangeOutput> {
     const { id_item, name } = itemNameUpdate;
     return new Promise<ChangeOutput>((resolve, reject) => {
-      this.getItem({ id_item }, context).then((item) => {
-        if (!item)
-          resolve({ message: `item with id = ${id_item} doesn't exist` });
-        this._itemService.itemRepo
-          .save({
-            id: item.id,
-            name,
-          })
-          .then((updatedItem) => {
-            this._historicService.changeRepo
-              .save(
-                this._historicService.changeRepo.create({
-                  previousValue: `${item.name}`,
-                  change: 'Name',
-                }),
-              )
-              .then((change) => {
-                this._historicService.changeRepo
-                  .createQueryBuilder('change')
-                  .relation('item')
-                  .of(change.id)
-                  .set(item.id)
-                  .finally(() => {
-                    resolve({
-                      message: 'updated item',
-                      item: {
-                        id: item.id,
-                        stock: item.stock,
-                        price: item.price,
-                        imageUrl: item.imageUrl,
-                        createdAt: item.createdAt,
-                        // UPDATE elements
-                        name: updatedItem.name,
-                        updatedAt: updatedItem.updatedAt,
-                      },
+      this.getItem({ id_item }, context)
+        .then((item) => {
+          if (!item)
+            resolve({ message: `item with id = ${id_item} doesn't exist` });
+          this._itemService.itemRepo
+            .save({
+              id: item.id,
+              name,
+            })
+            .then((updatedItem) => {
+              this._historicService.changeRepo
+                .save(
+                  this._historicService.changeRepo.create({
+                    previousValue: `${item.name}`,
+                    change: 'Name',
+                  }),
+                )
+                .then((change) => {
+                  this._historicService.changeRepo
+                    .createQueryBuilder('change')
+                    .relation('item')
+                    .of(change.id)
+                    .set(item.id)
+                    .finally(() => {
+                      resolve({
+                        message: 'updated item',
+                        item: {
+                          id: item.id,
+                          stock: item.stock,
+                          price: item.price,
+                          imageUrl: item.imageUrl,
+                          createdAt: item.createdAt,
+                          // UPDATE elements
+                          name: updatedItem.name,
+                          updatedAt: updatedItem.updatedAt,
+                        },
+                      });
                     });
-                  });
-              });
-          });
-      });
+                })
+                .catch((error) => reject(error));
+            })
+            .catch((error) => reject(error));
+        })
+        .catch((error) => reject(error));
     });
   }
 
@@ -93,46 +97,50 @@ export class UpdateItemResolver {
   ): Promise<ChangeOutput> {
     const { id_item, stock } = itemNameUpdate;
     return new Promise<ChangeOutput>((resolve, reject) => {
-      this.getItem({ id_item }, context).then((item) => {
-        if (!item)
-          resolve({ message: `item with id = ${id_item} doesn't exist` });
-        this._itemService.itemRepo
-          .save({
-            id: item.id,
-            stock,
-          })
-          .then((updatedItem) => {
-            this._historicService.changeRepo
-              .save(
-                this._historicService.changeRepo.create({
-                  previousValue: `${item.stock}`,
-                  change: 'Stock',
-                }),
-              )
-              .then((change) => {
-                this._historicService.changeRepo
-                  .createQueryBuilder('change')
-                  .relation('item')
-                  .of(change.id)
-                  .set(item.id)
-                  .finally(() => {
-                    resolve({
-                      message: 'updated item',
-                      item: {
-                        id: item.id,
-                        name: item.name,
-                        price: item.price,
-                        imageUrl: item.imageUrl,
-                        createdAt: item.createdAt,
-                        // UPDATE elements
-                        stock: updatedItem.stock,
-                        updatedAt: updatedItem.updatedAt,
-                      },
+      this.getItem({ id_item }, context)
+        .then((item) => {
+          if (!item)
+            resolve({ message: `item with id = ${id_item} doesn't exist` });
+          this._itemService.itemRepo
+            .save({
+              id: item.id,
+              stock,
+            })
+            .then((updatedItem) => {
+              this._historicService.changeRepo
+                .save(
+                  this._historicService.changeRepo.create({
+                    previousValue: `${item.stock}`,
+                    change: 'Stock',
+                  }),
+                )
+                .then((change) => {
+                  this._historicService.changeRepo
+                    .createQueryBuilder('change')
+                    .relation('item')
+                    .of(change.id)
+                    .set(item.id)
+                    .finally(() => {
+                      resolve({
+                        message: 'updated item',
+                        item: {
+                          id: item.id,
+                          name: item.name,
+                          price: item.price,
+                          imageUrl: item.imageUrl,
+                          createdAt: item.createdAt,
+                          // UPDATE elements
+                          stock: updatedItem.stock,
+                          updatedAt: updatedItem.updatedAt,
+                        },
+                      });
                     });
-                  });
-              });
-          });
-      });
+                })
+                .catch((error) => reject(error));
+            })
+            .catch((error) => reject(error));
+        })
+        .catch((error) => reject(error));
     });
   }
 
@@ -148,46 +156,50 @@ export class UpdateItemResolver {
   ): Promise<ChangeOutput> {
     const { id_item, price } = itemNameUpdate;
     return new Promise<ChangeOutput>((resolve, reject) => {
-      this.getItem({ id_item }, context).then((item) => {
-        if (!item)
-          resolve({ message: `item with id = ${id_item} doesn't exist` });
-        this._itemService.itemRepo
-          .save({
-            id: item.id,
-            price,
-          })
-          .then((updatedItem) => {
-            this._historicService.changeRepo
-              .save(
-                this._historicService.changeRepo.create({
-                  previousValue: `${item.price}`,
-                  change: 'Price',
-                }),
-              )
-              .then((change) => {
-                this._historicService.changeRepo
-                  .createQueryBuilder('change')
-                  .relation('item')
-                  .of(change.id)
-                  .set(item.id)
-                  .finally(() => {
-                    resolve({
-                      message: 'updated item',
-                      item: {
-                        id: item.id,
-                        name: item.name,
-                        stock: item.stock,
-                        imageUrl: item.imageUrl,
-                        createdAt: item.createdAt,
-                        // UPDATE elements
-                        price: updatedItem.price,
-                        updatedAt: updatedItem.updatedAt,
-                      },
+      this.getItem({ id_item }, context)
+        .then((item) => {
+          if (!item)
+            resolve({ message: `item with id = ${id_item} doesn't exist` });
+          this._itemService.itemRepo
+            .save({
+              id: item.id,
+              price,
+            })
+            .then((updatedItem) => {
+              this._historicService.changeRepo
+                .save(
+                  this._historicService.changeRepo.create({
+                    previousValue: `${item.price}`,
+                    change: 'Price',
+                  }),
+                )
+                .then((change) => {
+                  this._historicService.changeRepo
+                    .createQueryBuilder('change')
+                    .relation('item')
+                    .of(change.id)
+                    .set(item.id)
+                    .finally(() => {
+                      resolve({
+                        message: 'updated item',
+                        item: {
+                          id: item.id,
+                          name: item.name,
+                          stock: item.stock,
+                          imageUrl: item.imageUrl,
+                          createdAt: item.createdAt,
+                          // UPDATE elements
+                          price: updatedItem.price,
+                          updatedAt: updatedItem.updatedAt,
+                        },
+                      });
                     });
-                  });
-              });
-          });
-      });
+                })
+                .catch((error) => reject(error));
+            })
+            .catch((error) => reject(error));
+        })
+        .catch((error) => reject(error));
     });
   }
 
@@ -203,46 +215,50 @@ export class UpdateItemResolver {
   ): Promise<ChangeOutput> {
     const { id_item, imageUrl } = itemNameUpdate;
     return new Promise<ChangeOutput>((resolve, reject) => {
-      this.getItem({ id_item }, context).then((item) => {
-        if (!item)
-          resolve({ message: `item with id = ${id_item} doesn't exist` });
-        this._itemService.itemRepo
-          .save({
-            id: item.id,
-            imageUrl,
-          })
-          .then((updatedItem) => {
-            this._historicService.changeRepo
-              .save(
-                this._historicService.changeRepo.create({
-                  previousValue: `${item.imageUrl}`,
-                  change: 'Image',
-                }),
-              )
-              .then((change) => {
-                this._historicService.changeRepo
-                  .createQueryBuilder('change')
-                  .relation('item')
-                  .of(change.id)
-                  .set(item.id)
-                  .finally(() => {
-                    resolve({
-                      message: 'updated item',
-                      item: {
-                        id: item.id,
-                        name: item.name,
-                        price: item.price,
-                        stock: item.stock,
-                        createdAt: item.createdAt,
-                        // UPDATE elements
-                        imageUrl: updatedItem.imageUrl,
-                        updatedAt: updatedItem.updatedAt,
-                      },
+      this.getItem({ id_item }, context)
+        .then((item) => {
+          if (!item)
+            resolve({ message: `item with id = ${id_item} doesn't exist` });
+          this._itemService.itemRepo
+            .save({
+              id: item.id,
+              imageUrl,
+            })
+            .then((updatedItem) => {
+              this._historicService.changeRepo
+                .save(
+                  this._historicService.changeRepo.create({
+                    previousValue: `${item.imageUrl}`,
+                    change: 'Image',
+                  }),
+                )
+                .then((change) => {
+                  this._historicService.changeRepo
+                    .createQueryBuilder('change')
+                    .relation('item')
+                    .of(change.id)
+                    .set(item.id)
+                    .finally(() => {
+                      resolve({
+                        message: 'updated item',
+                        item: {
+                          id: item.id,
+                          name: item.name,
+                          price: item.price,
+                          stock: item.stock,
+                          createdAt: item.createdAt,
+                          // UPDATE elements
+                          imageUrl: updatedItem.imageUrl,
+                          updatedAt: updatedItem.updatedAt,
+                        },
+                      });
                     });
-                  });
-              });
-          });
-      });
+                })
+                .catch((error) => reject(error));
+            })
+            .catch((error) => reject(error));
+        })
+        .catch((error) => reject(error));
     });
   }
 
