@@ -62,12 +62,14 @@ type SignInOutput {
   message: String!
 }
 
+"""output object in log_in mutation"""
 type LogInOutput {
   status: Float!
   message: String!
   token: String
 }
 
+"""response in find_all query"""
 type ItemsOutput {
   items: [ItemEntity!]!
   count: Float!
@@ -87,7 +89,10 @@ type HistoricOutput {
 }
 
 type Query {
-  findAll(
+  """
+  find all items query, user gets only their items & admin gets all from 'basic' users and their items
+  """
+  find_all(
     """
     find all items, if user role is 'basic' response with his items, if user role is 'admin' response with all items from 'basic' users and his items
     """
@@ -103,6 +108,7 @@ type Query {
   changes(itemId: ChangesReadInput!): HistoricOutput!
 }
 
+"""input to read items"""
 input ReadInput {
   """quantity of items"""
   take: Float = 10
@@ -136,7 +142,7 @@ type Mutation {
   signIn(user: SignInInput!): SignInOutput!
 
   """user logIn mutation"""
-  logIn(user: LogInInput!): LogInOutput!
+  log_in(user: LogInInput!): LogInOutput!
 
   """mutation for item creation"""
   create_item(paginate: CreateInput): ItemEntity!
@@ -176,6 +182,7 @@ input LogInInput {
   password: String!
 }
 
+"""input to create item"""
 input CreateInput {
   """Name of the item"""
   name: String!
@@ -190,22 +197,38 @@ input CreateInput {
   price: Float = 0
 }
 
+"""update name class"""
 input UpdateNameInput {
+  """item ID"""
   id_item: Float!
+
+  """new name in item"""
   name: String!
 }
 
+"""update stock class"""
 input UpdateStockInput {
+  """item ID"""
   id_item: Float!
+
+  """new stock in item"""
   stock: Float!
 }
 
+"""update price class"""
 input UpdatePriceInput {
+  """item ID"""
   id_item: Float!
+
+  """new price in item"""
   price: Float!
 }
 
+"""update imageURL class"""
 input UpdateImageInput {
+  """item ID"""
   id_item: Float!
+
+  """new imageURL in item"""
   imageUrl: String!
 }
