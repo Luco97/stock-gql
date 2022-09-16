@@ -18,7 +18,11 @@ export class ReadItemResolver {
     private _itemService: ItemRepositoryService,
   ) {}
 
-  @Query(() => ItemsOutput)
+  @Query(() => ItemsOutput, {
+    name: 'find_all',
+    description:
+      "find all items query, user gets only their items & admin gets all from 'basic' users and their items",
+  })
   @SetMetadata('roles', ['basic', 'admin'])
   @UseGuards(RoleGuard)
   async findAll(
