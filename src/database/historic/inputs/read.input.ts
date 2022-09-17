@@ -2,7 +2,9 @@ import { Field, InputType } from '@nestjs/graphql';
 
 import { IsDefined, IsOptional } from 'class-validator';
 
-@InputType('ChangesReadInput')
+@InputType('find_all_changes', {
+  description: 'find all changes made in one item',
+})
 export class ReadInput {
   @Field(() => Number, { description: 'ID of item' })
   @IsDefined()
