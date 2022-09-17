@@ -2,7 +2,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 
 import { HistoricEntity } from '../model/historic-entity';
 
-@ObjectType()
+@ObjectType({ description: 'response of changes in item' })
 export class HistoricOutput {
   @Field(() => [HistoricEntity], { description: 'array of changes in item' })
   changes: HistoricEntity[];
