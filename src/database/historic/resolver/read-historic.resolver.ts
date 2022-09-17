@@ -18,6 +18,7 @@ export class ReadHistoricResolver {
   ) {}
 
   @Query(() => HistoricOutput, {
+    name: 'item_changes',
     description: "find All changes of one item where id == 'itemId' ",
   })
   @SetMetadata('roles', ['basic', 'admin'])
