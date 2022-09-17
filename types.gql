@@ -71,12 +71,19 @@ type LogInOutput {
 
 """response in find_all query"""
 type ItemsOutput {
+  """array with the items"""
   items: [ItemEntity!]!
+
+  """number of items in the array"""
   count: Float!
 }
 
+"""response objectType when any items is updated"""
 type ChangeOutput {
+  """message of the update"""
   message: String
+
+  """the item with the update fields"""
   item: ItemEntity
 }
 
