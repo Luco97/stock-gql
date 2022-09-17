@@ -87,6 +87,7 @@ type ChangeOutput {
   item: ItemEntity
 }
 
+"""response of changes in item"""
 type HistoricOutput {
   """array of changes in item"""
   changes: [HistoricEntity!]!
@@ -112,7 +113,7 @@ type Query {
   find_one_item(id: Float!): ItemEntity
 
   """find All changes of one item where id == 'itemId' """
-  changes(itemId: ChangesReadInput!): HistoricOutput!
+  item_changes(itemId: find_all_changes!): HistoricOutput!
 }
 
 """input to read items"""
@@ -130,7 +131,8 @@ input ReadInput {
   order: String = "ASC"
 }
 
-input ChangesReadInput {
+"""find all changes made in one item"""
+input find_all_changes {
   """ID of item"""
   itemId: Float!
 
