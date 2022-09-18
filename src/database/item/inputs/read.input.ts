@@ -1,6 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
 
-@InputType({ description: 'input to read items' })
+@InputType('read_all', { description: 'input to read items' })
 // @ArgsType() // No funciona como dice la documentacion, seguir usando InputType
 export class ReadInput {
   @Field(() => Number, {
