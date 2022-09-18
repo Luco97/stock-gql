@@ -2,10 +2,6 @@ import { Field, InputType } from '@nestjs/graphql';
 
 import { Min, MinLength } from 'class-validator';
 
-@InputType({
-  description:
-    'update base class, extends in the others updates mutation input',
-})
 export class UpdateInput {
   @Field(() => Number, {
     description: 'item ID',
