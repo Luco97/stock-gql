@@ -104,7 +104,7 @@ type Query {
     """
     find all items, if user role is 'basic' response with his items, if user role is 'admin' response with all items from 'basic' users and his items
     """
-    paginate: ReadInput = {}
+    paginate: read_all = {}
   ): ItemsOutput!
 
   """
@@ -117,7 +117,7 @@ type Query {
 }
 
 """input to read items"""
-input ReadInput {
+input read_all {
   """quantity of items"""
   take: Float = 10
 
@@ -208,36 +208,24 @@ input CreateInput {
 
 """update name class"""
 input UpdateNameInput {
-  """item ID"""
-  id_item: Float!
-
   """new name in item"""
   name: String!
 }
 
 """update stock class"""
 input UpdateStockInput {
-  """item ID"""
-  id_item: Float!
-
   """new stock in item"""
   stock: Float!
 }
 
 """update price class"""
 input UpdatePriceInput {
-  """item ID"""
-  id_item: Float!
-
   """new price in item"""
   price: Float!
 }
 
 """update imageURL class"""
 input UpdateImageInput {
-  """item ID"""
-  id_item: Float!
-
   """new imageURL in item"""
   imageUrl: String!
 }
