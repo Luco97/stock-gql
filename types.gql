@@ -151,22 +151,22 @@ type Mutation {
   signIn(user: SignInInput!): SignInOutput!
 
   """user logIn mutation"""
-  log_in(user: LogInInput!): LogInOutput!
+  log_in(user: log_in!): LogInOutput!
 
   """mutation for item creation"""
-  create_item(paginate: CreateInput): ItemEntity!
+  create_item(paginate: create_item): ItemEntity!
 
   """update name of item mutation"""
-  update_name_item(item: UpdateNameInput!): ChangeOutput!
+  update_name_item(item: update_name!): ChangeOutput!
 
   """update stock of one item mutation"""
-  update_stock_item(item: UpdateStockInput!): ChangeOutput!
+  update_stock_item(item: update_stock!): ChangeOutput!
 
   """update price of one item"""
-  update_price_item(item: UpdatePriceInput!): ChangeOutput!
+  update_price_item(item: update_price!): ChangeOutput!
 
   """update the image of one item"""
-  update_image_item(item: UpdateImageInput!): ChangeOutput!
+  update_image_item(item: update_image!): ChangeOutput!
 
   """delete item mutation, only role 'admin' can delete items"""
   delete_item(id_item: Float!): ChangeOutput!
@@ -183,7 +183,8 @@ input SignInInput {
   password: String!
 }
 
-input LogInInput {
+"""log in object (with email and password)"""
+input log_in {
   """email of user to log in"""
   email: String!
 
@@ -192,7 +193,7 @@ input LogInInput {
 }
 
 """input to create item"""
-input CreateInput {
+input create_item {
   """Name of the item"""
   name: String!
 
@@ -207,25 +208,25 @@ input CreateInput {
 }
 
 """update name class"""
-input UpdateNameInput {
+input update_name {
   """new name in item"""
   name: String!
 }
 
 """update stock class"""
-input UpdateStockInput {
+input update_stock {
   """new stock in item"""
   stock: Float!
 }
 
 """update price class"""
-input UpdatePriceInput {
+input update_price {
   """new price in item"""
   price: Float!
 }
 
 """update imageURL class"""
-input UpdateImageInput {
+input update_image {
   """new imageURL in item"""
   imageUrl: String!
 }
