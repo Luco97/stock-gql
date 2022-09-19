@@ -2,7 +2,7 @@ import { Field, InputType } from '@nestjs/graphql';
 import { IsDefined, Min, MinLength } from 'class-validator';
 import { ItemEntity } from '../model/item-entity';
 
-@InputType({ description: 'input to create item' })
+@InputType('create_item', { description: 'input to create item' })
 export class CreateInput implements Partial<ItemEntity> {
   @Field(() => String, { description: 'Name of the item' })
   @IsDefined()
