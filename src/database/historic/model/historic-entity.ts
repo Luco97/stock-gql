@@ -11,7 +11,9 @@ import {
 import { ItemEntity } from '../../item/model/item-entity';
 
 @Entity()
-@ObjectType()
+@ObjectType({
+  description: 'historic entity table',
+})
 export class HistoricEntity {
   @Field(() => ID, { description: 'historic register ID' })
   @PrimaryGeneratedColumn()
