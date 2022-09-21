@@ -12,7 +12,7 @@ import { genSalt, hash } from 'bcrypt';
 import { ItemEntity } from '../../item/model/item-entity';
 
 @Entity()
-@ObjectType()
+@ObjectType({ description: 'user entity table' })
 export class UserEntity {
   @Field(() => ID)
   @PrimaryGeneratedColumn('increment')
@@ -26,7 +26,10 @@ export class UserEntity {
   @Column({ type: 'varchar' })
   username: string;
 
-  @Field(() => String)
+  @Field(() => String, {
+    nullable: true,
+    description: 'user pass never avalible for admins',
+  })
   @Column({ type: 'varchar', select: false })
   password: string;
 
