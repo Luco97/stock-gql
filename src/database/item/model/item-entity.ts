@@ -15,7 +15,7 @@ import { UserEntity } from '../../user/model/user-entity';
 import { HistoricEntity } from '../../historic/model/historic-entity';
 
 @Entity()
-@ObjectType()
+@ObjectType({ description: 'item entity table' })
 export class ItemEntity {
   @Field(() => ID, { description: 'item ID' })
   @PrimaryGeneratedColumn('increment')
