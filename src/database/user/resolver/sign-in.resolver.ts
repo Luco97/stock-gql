@@ -9,7 +9,10 @@ import { UserRepositoryService } from '../repository/user-repository.service';
 export class SignInResolver {
   constructor(private _userRepo: UserRepositoryService) {}
 
-  @Mutation(() => SignInOutput, { description: 'user register mutation' })
+  @Mutation(() => SignInOutput, {
+    name: 'register_user',
+    description: 'user register mutation',
+  })
   async signIn(@Args('user') createUser: SignInInput): Promise<SignInOutput> {
     const { email, password, username } = createUser;
     return new Promise<SignInOutput>((resolve, reject) =>
