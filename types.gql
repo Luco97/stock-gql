@@ -62,14 +62,21 @@ type UserEntity {
   items: [ItemEntity!]
 }
 
+"""output object of register_user"""
 type SignInOutput {
+  """status response"""
   status: Float!
+
+  """message for extra info"""
   message: String!
 }
 
 """output object in log_in mutation"""
 type LogInOutput {
+  """status response"""
   status: Float!
+
+  """message for extra info"""
   message: String!
   token: String
 }
@@ -153,7 +160,7 @@ input find_all_changes {
 
 type Mutation {
   """user register mutation"""
-  signIn(user: register_user!): SignInOutput!
+  register_user(user: register_user!): SignInOutput!
 
   """user logIn mutation"""
   log_in(user: log_in!): LogInOutput!
