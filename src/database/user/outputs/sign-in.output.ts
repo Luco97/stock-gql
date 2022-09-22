@@ -1,10 +1,10 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
-@ObjectType()
+@ObjectType({ description: 'output object of register_user' })
 export class SignInOutput {
-  @Field(() => Number)
+  @Field(() => Number, { description: 'status response' })
   status: number;
 
-  @Field(() => String)
+  @Field(() => String, { description: 'message for extra info' })
   message: string;
 }
