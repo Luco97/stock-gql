@@ -13,27 +13,19 @@ export class SignInResolver {
     name: 'register_user',
     description: 'user register mutation',
   })
-  async signIn(@Args('user') createUser: SignInInput): Promise<SignInOutput> {
+  async registerUser(
+    @Args('user') createUser: SignInInput,
+  ): Promise<SignInOutput> {
     const { email, password, username } = createUser;
     return new Promise<SignInOutput>((resolve, reject) =>
-      this._userRepo.userRepo
-        .createQueryBuilder('user')
-        .where('user.email = :email', { email })
-        .orWhere('user.username = :username', { username })
-        .getCount()
+      this._userRepo
+        .register_user({ email, username })
         .then((user) => {
           if (user)
             resolve({ status: HttpStatus.CONFLICT, message: 'already exist' });
           else
-            this._userRepo.userRepo
-              .save(
-                this._userRepo.userRepo.create({
-                  email,
-                  password,
-                  username,
-                  type: 'basic',
-                }),
-              )
+            this._userRepo
+              .create_user({ email, username, password })
               .then(() =>
                 resolve({
                   status: HttpStatus.OK,
