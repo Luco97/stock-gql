@@ -16,23 +16,14 @@ export class LogInResolver {
   ) {}
 
   @Mutation(() => LogInOutput, {
-    name: 'log_in',
+    name: 'sign_in',
     description: 'user logIn mutation',
   })
-  async logIn(@Args('user') loginUser: LogInInput): Promise<LogInOutput> {
+  async signIn(@Args('user') loginUser: LogInInput): Promise<LogInOutput> {
     const { email, password } = loginUser;
     return new Promise<LogInOutput>((resolve, reject) =>
-      this._userRepo.userRepo
-        .createQueryBuilder('user')
-        .select([
-          'user.id',
-          'user.username',
-          'user.email',
-          'user.password',
-          'user.type',
-        ])
-        .where('user.email = :email', { email })
-        .getOne()
+      this._userRepo
+        .find_one_by_email({ email })
         .then((user) => {
           if (!user)
             resolve({
