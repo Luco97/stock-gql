@@ -163,7 +163,7 @@ type Mutation {
   register_user(user: register_user!): SignInOutput!
 
   """user logIn mutation"""
-  log_in(user: log_in!): LogInOutput!
+  sign_in(user: log_in!): LogInOutput!
 
   """mutation for item creation"""
   create_item(paginate: create_item): ItemEntity!
