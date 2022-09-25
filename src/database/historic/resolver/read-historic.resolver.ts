@@ -2,7 +2,6 @@ import { SetMetadata, UseGuards } from '@nestjs/common';
 import { Args, Context, Query, Resolver } from '@nestjs/graphql';
 
 import { Request } from 'express';
-import { Brackets } from 'typeorm';
 
 import { AuthService } from '@Shared/auth';
 import { ReadInput } from '../inputs/read.input';
@@ -27,45 +26,26 @@ export class ReadHistoricResolver {
     const req: Request = context.req;
     const token: string = req.headers?.authorization;
     const type: string = this._authService.userType(token);
+    const id_user = this._authService.userID(token);
 
     const { itemId, order } = getInput;
 
     return new Promise<HistoricOutput>((resolve, reject) => {
       if (type == 'basic') {
-        this._historicRepo.changeRepo
-          .createQueryBuilder('changes')
-          .leftJoin('changes.item', 'item')
-          .leftJoin('item.user', 'user')
-          .where('item.id = :itemId', { itemId })
-          .andWhere('user.id = :id_user', {
-            id_user: this._authService.userID(token),
+        this._historicRepo
+          .get_historic_one_item({
+            itemId,
+            order,
+            id_user: this._historicRepo.basic_condition(id_user),
           })
-          .orderBy(
-            'changes.createdAt',
-            ['ASC', 'DESC'].includes(order) ? order : 'ASC',
-          )
-          .getManyAndCount()
           .then(([changes, count]) => resolve({ changes, count }));
       } else {
-        this._historicRepo.changeRepo
-          .createQueryBuilder('changes')
-          .leftJoin('changes.item', 'item')
-          .leftJoin('item.user', 'user')
-          .where('item.id = :itemId', { itemId })
-          .andWhere(
-            new Brackets((qb) =>
-              qb
-                .where('user.type = :type', { type: 'basic' }) // changes from normal user
-                .orWhere('user.id = :id_user', {
-                  id_user: this._authService.userID(token), // OR changes from actual admin user
-                }),
-            ),
-          )
-          .orderBy(
-            'changes.createdAt',
-            ['ASC', 'DESC'].includes(order) ? order : 'ASC',
-          )
-          .getManyAndCount()
+        this._historicRepo
+          .get_historic_one_item({
+            itemId,
+            order,
+            id_user: this._historicRepo.admin_condition(id_user),
+          })
           .then(([changes, count]) => resolve({ changes, count }));
       }
     });
