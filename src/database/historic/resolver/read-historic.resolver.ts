@@ -30,43 +30,44 @@ export class ReadHistoricResolver {
 
     const { itemId, order } = getInput;
 
-    if (type == 'basic') {
-      const [changes, count] = await this._historicRepo.changeRepo
-        .createQueryBuilder('changes')
-        .leftJoin('changes.item', 'item')
-        .leftJoin('item.user', 'user')
-        .where('item.id = :itemId', { itemId })
-        .andWhere('user.id = :id_user', {
-          id_user: this._authService.userID(token),
-        })
-        .orderBy(
-          'changes.createdAt',
-          ['ASC', 'DESC'].includes(order) ? order : 'ASC',
-        )
-        .getManyAndCount();
-      return { changes, count };
-    } else {
-      const [changes, count] = await this._historicRepo.changeRepo
-        .createQueryBuilder('changes')
-        .leftJoin('changes.item', 'item')
-        .leftJoin('item.user', 'user')
-        .where('item.id = :itemId', { itemId })
-        .andWhere(
-          new Brackets((qb) =>
-            qb
-              .where('user.type = :type', { type: 'basic' }) // changes from normal user
-              .orWhere('user.id = :id_user', {
-                // OR changes from actual admin user
-                id_user: this._authService.userID(token),
-              }),
-          ),
-        )
-        .orderBy(
-          'changes.createdAt',
-          ['ASC', 'DESC'].includes(order) ? order : 'ASC',
-        )
-        .getManyAndCount();
-      return { changes, count };
-    }
+    return new Promise<HistoricOutput>((resolve, reject) => {
+      if (type == 'basic') {
+        this._historicRepo.changeRepo
+          .createQueryBuilder('changes')
+          .leftJoin('changes.item', 'item')
+          .leftJoin('item.user', 'user')
+          .where('item.id = :itemId', { itemId })
+          .andWhere('user.id = :id_user', {
+            id_user: this._authService.userID(token),
+          })
+          .orderBy(
+            'changes.createdAt',
+            ['ASC', 'DESC'].includes(order) ? order : 'ASC',
+          )
+          .getManyAndCount()
+          .then(([changes, count]) => resolve({ changes, count }));
+      } else {
+        this._historicRepo.changeRepo
+          .createQueryBuilder('changes')
+          .leftJoin('changes.item', 'item')
+          .leftJoin('item.user', 'user')
+          .where('item.id = :itemId', { itemId })
+          .andWhere(
+            new Brackets((qb) =>
+              qb
+                .where('user.type = :type', { type: 'basic' }) // changes from normal user
+                .orWhere('user.id = :id_user', {
+                  id_user: this._authService.userID(token), // OR changes from actual admin user
+                }),
+            ),
+          )
+          .orderBy(
+            'changes.createdAt',
+            ['ASC', 'DESC'].includes(order) ? order : 'ASC',
+          )
+          .getManyAndCount()
+          .then(([changes, count]) => resolve({ changes, count }));
+      }
+    });
   }
 }
