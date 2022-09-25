@@ -15,6 +15,19 @@ export class UserRepositoryService {
     return this._userRepo;
   }
 
+  find_and_count_roles(parameters: {
+    id_user: number;
+    roles: string[];
+  }): Promise<number> {
+    const { id_user, roles } = parameters;
+    return this._userRepo
+      .createQueryBuilder('user')
+      .select(['user.id', 'user.type'])
+      .where('user.id = :id_user', { id_user })
+      .andWhere('user.type IN (:...roles)', { roles })
+      .getCount();
+  }
+
   register_user(parameters: {
     email: string;
     username: string;
