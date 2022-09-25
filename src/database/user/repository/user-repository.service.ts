@@ -11,10 +11,6 @@ export class UserRepositoryService {
     @InjectRepository(UserEntity) private _userRepo: Repository<UserEntity>,
   ) {}
 
-  get userRepo(): Repository<UserEntity> {
-    return this._userRepo;
-  }
-
   find_and_count_roles(parameters: {
     id_user: number;
     roles: string[];
