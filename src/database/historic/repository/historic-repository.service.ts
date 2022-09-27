@@ -12,10 +12,6 @@ export class HistoricRepositoryService {
     private _changeRepo: Repository<HistoricEntity>,
   ) {}
 
-  get changeRepo(): Repository<HistoricEntity> {
-    return this._changeRepo;
-  }
-
   basic_condition(id_user: number): Brackets {
     return new Brackets((qb) =>
       qb.where('user.id = :id_user', {
