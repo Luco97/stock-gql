@@ -52,4 +52,26 @@ export class HistoricRepositoryService {
       )
       .getManyAndCount();
   }
+
+  create_historic(parameters: {
+    previousValue: string;
+    change: string;
+  }): Promise<HistoricEntity> {
+    const { previousValue, change } = parameters;
+    return this._changeRepo.save(
+      this._changeRepo.create({
+        previousValue,
+        change,
+      }),
+    );
+  }
+
+  create_item_relation(parameters: { item_id: number; change_id: number }) {
+    const { change_id, item_id } = parameters;
+    return this._changeRepo
+      .createQueryBuilder('create')
+      .relation('item')
+      .of(change_id)
+      .set(item_id);
+  }
 }
