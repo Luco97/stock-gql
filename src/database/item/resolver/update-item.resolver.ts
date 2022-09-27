@@ -48,19 +48,17 @@ export class UpdateItemResolver {
               name,
             })
             .then((updatedItem) => {
-              this._historicService.changeRepo
-                .save(
-                  this._historicService.changeRepo.create({
-                    previousValue: `${item.name}`,
-                    change: 'Name',
-                  }),
-                )
+              this._historicService
+                .create_historic({
+                  previousValue: `${item.name}`,
+                  change: 'Name',
+                })
                 .then((change) => {
-                  this._historicService.changeRepo
-                    .createQueryBuilder('change')
-                    .relation('item')
-                    .of(change.id)
-                    .set(item.id)
+                  this._historicService
+                    .create_item_relation({
+                      change_id: change.id,
+                      item_id: item.id,
+                    })
                     .finally(() => {
                       resolve({
                         message: 'updated item',
@@ -107,19 +105,17 @@ export class UpdateItemResolver {
               stock,
             })
             .then((updatedItem) => {
-              this._historicService.changeRepo
-                .save(
-                  this._historicService.changeRepo.create({
-                    previousValue: `${item.stock}`,
-                    change: 'Stock',
-                  }),
-                )
+              this._historicService
+                .create_historic({
+                  previousValue: `${item.stock}`,
+                  change: 'Stock',
+                })
                 .then((change) => {
-                  this._historicService.changeRepo
-                    .createQueryBuilder('change')
-                    .relation('item')
-                    .of(change.id)
-                    .set(item.id)
+                  this._historicService
+                    .create_item_relation({
+                      change_id: change.id,
+                      item_id: item.id,
+                    })
                     .finally(() => {
                       resolve({
                         message: 'updated item',
@@ -166,19 +162,17 @@ export class UpdateItemResolver {
               price,
             })
             .then((updatedItem) => {
-              this._historicService.changeRepo
-                .save(
-                  this._historicService.changeRepo.create({
-                    previousValue: `${item.price}`,
-                    change: 'Price',
-                  }),
-                )
+              this._historicService
+                .create_historic({
+                  previousValue: `${item.price}`,
+                  change: 'Price',
+                })
                 .then((change) => {
-                  this._historicService.changeRepo
-                    .createQueryBuilder('change')
-                    .relation('item')
-                    .of(change.id)
-                    .set(item.id)
+                  this._historicService
+                    .create_item_relation({
+                      change_id: change.id,
+                      item_id: item.id,
+                    })
                     .finally(() => {
                       resolve({
                         message: 'updated item',
@@ -225,19 +219,17 @@ export class UpdateItemResolver {
               imageUrl,
             })
             .then((updatedItem) => {
-              this._historicService.changeRepo
-                .save(
-                  this._historicService.changeRepo.create({
-                    previousValue: `${item.imageUrl}`,
-                    change: 'Image',
-                  }),
-                )
+              this._historicService
+                .create_historic({
+                  previousValue: `${item.imageUrl}`,
+                  change: 'Image',
+                })
                 .then((change) => {
-                  this._historicService.changeRepo
-                    .createQueryBuilder('change')
-                    .relation('item')
-                    .of(change.id)
-                    .set(item.id)
+                  this._historicService
+                    .create_item_relation({
+                      change_id: change.id,
+                      item_id: item.id,
+                    })
                     .finally(() => {
                       resolve({
                         message: 'updated item',
