@@ -45,4 +45,32 @@ export class ItemRepositoryService {
       .andWhere(id_user)
       .getOne();
   }
+
+  find_all_items(parameters: {
+    skip: number;
+    take: number;
+    id_user: number;
+    orderBy: string;
+    order: 'ASC' | 'DESC';
+  }): Promise<[ItemEntity[], number]> {
+    const { id_user, order, orderBy, skip, take } = parameters;
+    return this._itemRepo
+      .createQueryBuilder('items')
+      .leftJoinAndSelect('items.user', 'user')
+      .where('user.type = :type', { type: 'basic' })
+      .orWhere('user.id = :id_user', {
+        id_user,
+      })
+      .orderBy(
+        `items.${
+          ['name', 'stock', 'createdAt', 'updateAt'].includes(orderBy)
+            ? orderBy
+            : 'createdAt'
+        }`,
+        ['ASC', 'DESC'].includes(order) ? order : 'ASC',
+      )
+      .take(take || 10)
+      .skip(skip * take || 0)
+      .getManyAndCount();
+  }
 }
