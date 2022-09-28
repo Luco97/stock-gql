@@ -31,15 +31,8 @@ export class CreateItemResolver {
     const { name, imageUrl, stock, price } = createInput;
     const id_user = this._authService.userID(token);
     return new Promise<ItemEntity>((resolve, reject) => {
-      this._itemService.itemRepo
-        .save(
-          this._itemService.itemRepo.create({
-            imageUrl,
-            name,
-            stock,
-            price,
-          }),
-        )
+      this._itemService
+        .create_item({ name, imageUrl, price, stock })
         .then((newItem) => {
           this._itemService.itemRepo
             .createQueryBuilder('item')
