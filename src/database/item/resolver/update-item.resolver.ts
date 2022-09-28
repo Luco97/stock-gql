@@ -2,7 +2,6 @@ import { SetMetadata, UseGuards } from '@nestjs/common';
 import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
 
 import { Request } from 'express';
-import { Brackets } from 'typeorm';
 
 import {
   UpdateInput,
@@ -73,7 +72,8 @@ export class UpdateItemResolver {
                           updatedAt: updatedItem.updatedAt,
                         },
                       });
-                    });
+                    })
+                    .catch((error) => reject(error));
                 })
                 .catch((error) => reject(error));
             })
@@ -130,7 +130,8 @@ export class UpdateItemResolver {
                           updatedAt: updatedItem.updatedAt,
                         },
                       });
-                    });
+                    })
+                    .catch((error) => reject(error));
                 })
                 .catch((error) => reject(error));
             })
@@ -187,7 +188,8 @@ export class UpdateItemResolver {
                           updatedAt: updatedItem.updatedAt,
                         },
                       });
-                    });
+                    })
+                    .catch((error) => reject(error));
                 })
                 .catch((error) => reject(error));
             })
@@ -244,7 +246,8 @@ export class UpdateItemResolver {
                           updatedAt: updatedItem.updatedAt,
                         },
                       });
-                    });
+                    })
+                    .catch((error) => reject(error));
                 })
                 .catch((error) => reject(error));
             })
