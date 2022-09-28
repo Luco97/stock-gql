@@ -94,35 +94,22 @@ export class ReadItemResolver {
   @SetMetadata('roles', ['basic', 'admin'])
   @UseGuards(RoleGuard)
   async findOne(
-    @Args('id') id_item: Number,
+    @Args('id') id_item: number,
     @Context() context,
   ): Promise<ItemEntity> {
     const req: Request = context.req;
     const token: string = req.headers?.authorization;
     const type: string = this._authService.userType(token);
+    const id_user = this._authService.userID(token);
     if (type == 'basic')
-      return this._itemService.itemRepo
-        .createQueryBuilder('item')
-        .leftJoin('item.user', 'user')
-        .where('item.id = :id_item', { id_item })
-        .andWhere('user.id = :id_user', {
-          id_user: this._authService.userID(token),
-        })
-        .getOne();
+      return this._itemService.find_one_item({
+        id_item,
+        id_user: this._itemService.basic_condition(id_user),
+      });
     else
-      return this._itemService.itemRepo
-        .createQueryBuilder('item')
-        .leftJoinAndSelect('item.user', 'user')
-        .where('item.id = :id_item', { id_item })
-        .andWhere(
-          new Brackets((qb) =>
-            qb
-              .where('user.type = :type', { type: 'basic' })
-              .orWhere('user.id = :id_user', {
-                id_user: this._authService.userID(token),
-              }),
-          ),
-        )
-        .getOne();
+      return this._itemService.find_one_item({
+        id_item,
+        id_user: this._itemService.admin_condition(id_user),
+      });
   }
 }
