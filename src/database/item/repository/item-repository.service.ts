@@ -33,6 +33,18 @@ export class ItemRepositoryService {
     );
   }
 
+  create_item(parameters: {
+    name: string;
+    imageUrl: string;
+    stock: number;
+    price: number;
+  }): Promise<ItemEntity> {
+    const { name, imageUrl, stock, price } = parameters;
+    return this._itemRepo.save(
+      this._itemRepo.create({ name, imageUrl, price, stock }),
+    );
+  }
+
   find_one_item(parameters: {
     id_item: number;
     id_user: Brackets;
