@@ -259,41 +259,62 @@ export class UpdateItemResolver {
     const token: string = req.headers?.authorization;
     const type: string = this._authService.userType(token);
     const { id_item } = itemUpdate;
+    const id_user = this._authService.userID(token);
     let item: Promise<ItemEntity>;
     if (type == 'basic')
-      item = this._itemService.itemRepo
-        .createQueryBuilder('item')
-        .leftJoin('item.user', 'user')
-        .where('item.id = :id_item', { id_item })
-        .andWhere('user.id = :id_user', {
-          id_user: this._authService.userID(token),
-        })
-        .getOne();
+      item = this._itemService.find_one_item({
+        id_item,
+        id_user: this._itemService.basic_condition(id_user),
+      });
+    // item = this._itemService.itemRepo
+    //   .createQueryBuilder('item')
+    //   .leftJoin('item.user', 'user')
+    //   .where('item.id = :id_item', { id_item })
+    //   .andWhere('user.id = :id_user', {
+    //     id_user: this._authService.userID(token),
+    //   })
+    //   .getOne();
     else
-      item = this._itemService.itemRepo
-        .createQueryBuilder('item')
-        .leftJoin('item.user', 'user')
-        .where(
-          // Item propio del admin
-          new Brackets((qb) =>
-            qb
-              .where('item.id = :id_item', { id_item })
-              .andWhere('user.id = :id_user', {
-                id_user: this._authService.userID(token),
-              }),
-          ),
-        )
-        .orWhere(
-          // Item de un usario basic
-          new Brackets((qb) =>
-            qb
-              .where('item.id = :id_item', { id_item })
-              .andWhere('user.type = :type', {
-                type: 'basic',
-              }),
-          ),
-        )
-        .getOne();
+      item = this._itemService.find_one_item({
+        id_item,
+        id_user: this._itemService.admin_condition(id_user),
+      });
     return item;
+    // item = this._itemService.itemRepo
+    //   .createQueryBuilder('item')
+    //   .leftJoin('item.user', 'user')
+    //   .where('item.id = :id_item', { id_item })
+    //   .andWhere(
+    //     new Brackets((qb) =>
+    //       qb
+    //         .where('user.id = :id_user', {
+    //           id_user: this._authService.userID(token),
+    //         })
+    //         .orWhere('user.type = :type', {
+    //           type: 'basic',
+    //         }),
+    //     ),
+    //   )
+    //   .where(
+    //     // Item propio del admin
+    //     new Brackets((qb) =>
+    //       qb
+    //         .where('item.id = :id_item', { id_item })
+    //   .andWhere('user.id = :id_user', {
+    //     id_user: this._authService.userID(token),
+    //   }),
+    //     ),
+    //   )
+    //   .orWhere(
+    //     // Item de un usario basic
+    //     new Brackets((qb) =>
+    //       qb
+    //         .where('item.id = :id_item', { id_item })
+    //         .andWhere('user.type = :type', {
+    //           type: 'basic',
+    //         }),
+    //     ),
+    //   )
+    //   .getOne();
   }
 }
