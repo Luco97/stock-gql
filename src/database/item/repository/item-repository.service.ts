@@ -45,6 +45,18 @@ export class ItemRepositoryService {
     );
   }
 
+  create_user_relation(parameters: {
+    id_item: number;
+    id_user: number;
+  }): Promise<void> {
+    const { id_item, id_user } = parameters;
+    return this._itemRepo
+      .createQueryBuilder('item')
+      .relation('user')
+      .of(id_item)
+      .set(id_user);
+  }
+
   find_one_item(parameters: {
     id_item: number;
     id_user: Brackets;
