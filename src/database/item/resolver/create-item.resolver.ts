@@ -34,11 +34,8 @@ export class CreateItemResolver {
       this._itemService
         .create_item({ name, imageUrl, price, stock })
         .then((newItem) => {
-          this._itemService.itemRepo
-            .createQueryBuilder('item')
-            .relation('user')
-            .of(newItem.id)
-            .set(id_user)
+          this._itemService
+            .create_user_relation({ id_user, id_item: newItem.id })
             .then(() => resolve(newItem))
             .catch((error) => reject(error));
         })
