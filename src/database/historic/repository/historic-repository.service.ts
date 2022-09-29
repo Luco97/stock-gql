@@ -62,7 +62,10 @@ export class HistoricRepositoryService {
     );
   }
 
-  create_item_relation(parameters: { item_id: number; change_id: number }) {
+  create_item_relation(parameters: {
+    item_id: number;
+    change_id: number;
+  }): Promise<void> {
     const { change_id, item_id } = parameters;
     return this._changeRepo
       .createQueryBuilder('create')
