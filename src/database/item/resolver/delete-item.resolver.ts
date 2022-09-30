@@ -2,7 +2,6 @@ import { SetMetadata, UseGuards } from '@nestjs/common';
 import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
 
 import { Request } from 'express';
-import { Brackets } from 'typeorm';
 
 import { AuthService } from '@Shared/auth';
 import { RoleGuard } from '../../guards/role.guard';
@@ -30,22 +29,15 @@ export class DeleteItemResolver {
     const token: string = req.headers?.authorization;
     const adminID: number = this._authService.userID(token);
     return new Promise<ChangeOutput>((resolve, reject) => {
-      this._itemService.itemRepo
-        .createQueryBuilder('item')
-        .leftJoin('item.user', 'user')
-        .where('item.id = :id', { id })
-        .andWhere(
-          new Brackets((qb) =>
-            qb
-              .where('user.type = :type', { type: 'basic' })
-              .orWhere('user.id = :adminID', { adminID }),
-          ),
-        )
-        .getOne()
+      this._itemService
+        .find_one_item({
+          id_item: id,
+          id_user: this._itemService.admin_condition(adminID),
+        })
         .then((item) => {
           if (!item) resolve({ message: `item with id = ${id} doesn't exist` });
-          this._itemService.itemRepo
-            .softDelete(id)
+          this._itemService
+            .delete_item({ item_id: id })
             .then(() => resolve({ message: 'soft deleted item', item }));
         })
         .catch((error) => reject(error));
