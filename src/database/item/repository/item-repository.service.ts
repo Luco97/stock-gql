@@ -73,18 +73,15 @@ export class ItemRepositoryService {
   find_all_items(parameters: {
     skip: number;
     take: number;
-    id_user: number;
     orderBy: string;
+    id_user: Brackets;
     order: 'ASC' | 'DESC';
   }): Promise<[ItemEntity[], number]> {
     const { id_user, order, orderBy, skip, take } = parameters;
     return this._itemRepo
       .createQueryBuilder('items')
       .leftJoinAndSelect('items.user', 'user')
-      .where('user.type = :type', { type: 'basic' })
-      .orWhere('user.id = :id_user', {
-        id_user,
-      })
+      .where(id_user)
       .orderBy(
         `items.${
           ['name', 'stock', 'createdAt', 'updateAt'].includes(orderBy)
