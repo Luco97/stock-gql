@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { Repository, Brackets } from 'typeorm';
+import { Repository, Brackets, UpdateResult } from 'typeorm';
 
 import { ItemEntity } from '../model/item-entity';
 
@@ -96,5 +96,10 @@ export class ItemRepositoryService {
       .take(take || 10)
       .skip(skip * take || 0)
       .getManyAndCount();
+  }
+
+  delete_item(parameters: { item_id: number }): Promise<UpdateResult> {
+    const { item_id } = parameters;
+    return this._itemRepo.softDelete({ id: item_id });
   }
 }
