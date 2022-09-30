@@ -2,7 +2,6 @@ import { SetMetadata, UseGuards } from '@nestjs/common';
 import { Args, Context, Query, Resolver } from '@nestjs/graphql';
 
 import { Request } from 'express';
-import { Brackets } from 'typeorm';
 
 import { AuthService } from '@Shared/auth';
 import { ReadInput } from '../inputs/read.input';
@@ -39,46 +38,26 @@ export class ReadItemResolver {
     const req: Request = context.req;
     const token: string = req.headers?.authorization;
     const type: string = this._authService.userType(token);
+    const id_user = this._authService.userID(token);
     const { order, orderBy, skip, take } = getInput;
     return new Promise<ItemsOutput>((resolve, reject) => {
       let itemsPromise: Promise<[ItemEntity[], number]>;
       if (type == 'basic')
-        itemsPromise = this._itemService.itemRepo
-          .createQueryBuilder('items')
-          .leftJoin('items.user', 'user')
-          .where('user.id = :id_user', {
-            id_user: this._authService.userID(token),
-          })
-          .orderBy(
-            `items.${
-              ['name', 'stock', 'createdAt', 'updateAt'].includes(orderBy)
-                ? orderBy
-                : 'createdAt'
-            }`,
-            ['ASC', 'DESC'].includes(order) ? order : 'ASC',
-          )
-          .take(take || 10)
-          .skip(skip * take || 0)
-          .getManyAndCount();
+        itemsPromise = this._itemService.find_all_items({
+          skip,
+          take,
+          order,
+          orderBy,
+          id_user: this._itemService.basic_condition(id_user),
+        });
       else
-        itemsPromise = this._itemService.itemRepo
-          .createQueryBuilder('items')
-          .leftJoinAndSelect('items.user', 'user')
-          .where('user.type = :type', { type: 'basic' })
-          .orWhere('user.id = :id_user', {
-            id_user: this._authService.userID(token),
-          })
-          .orderBy(
-            `items.${
-              ['name', 'stock', 'createdAt', 'updateAt'].includes(orderBy)
-                ? orderBy
-                : 'createdAt'
-            }`,
-            ['ASC', 'DESC'].includes(order) ? order : 'ASC',
-          )
-          .take(take || 10)
-          .skip(skip * take || 0)
-          .getManyAndCount();
+        itemsPromise = this._itemService.find_all_items({
+          skip,
+          take,
+          order,
+          orderBy,
+          id_user: this._itemService.admin_condition(id_user),
+        });
       return itemsPromise
         .then(([items, count]) => resolve({ items, count }))
         .catch((error) => reject(error));
