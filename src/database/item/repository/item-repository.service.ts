@@ -11,10 +11,6 @@ export class ItemRepositoryService {
     @InjectRepository(ItemEntity) private _itemRepo: Repository<ItemEntity>,
   ) {}
 
-  get itemRepo(): Repository<ItemEntity> {
-    return this._itemRepo;
-  }
-
   basic_condition(id_user: number): Brackets {
     return new Brackets((qb) =>
       qb.where('user.id = :id_user', {
