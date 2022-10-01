@@ -41,43 +41,43 @@ export class UpdateItemResolver {
         .then((item) => {
           if (!item)
             resolve({ message: `item with id = ${id_item} doesn't exist` });
-          this._itemService.itemRepo
-            .save({
-              id: item.id,
-              name,
-            })
-            .then((updatedItem) => {
-              this._historicService
-                .create_historic({
-                  previousValue: `${item.name}`,
-                  change: 'Name',
-                })
-                .then((change) => {
-                  this._historicService
-                    .create_item_relation({
-                      change_id: change.id,
-                      item_id: item.id,
-                    })
-                    .finally(() => {
-                      resolve({
-                        message: 'updated item',
-                        item: {
-                          id: item.id,
-                          stock: item.stock,
-                          price: item.price,
-                          imageUrl: item.imageUrl,
-                          createdAt: item.createdAt,
-                          // UPDATE elements
-                          name: updatedItem.name,
-                          updatedAt: updatedItem.updatedAt,
-                        },
-                      });
-                    })
-                    .catch((error) => reject(error));
-                })
-                .catch((error) => reject(error));
-            })
-            .catch((error) => reject(error));
+          else
+            this._itemService.update_item({
+                id: item.id,
+                name,
+              })
+              .then((updatedItem) => {
+                this._historicService
+                  .create_historic({
+                    previousValue: `${item.name}`,
+                    change: 'Name',
+                  })
+                  .then((change) => {
+                    this._historicService
+                      .create_item_relation({
+                        change_id: change.id,
+                        item_id: item.id,
+                      })
+                      .finally(() => {
+                        resolve({
+                          message: 'updated item',
+                          item: {
+                            id: item.id,
+                            stock: item.stock,
+                            price: item.price,
+                            imageUrl: item.imageUrl,
+                            createdAt: item.createdAt,
+                            // UPDATE elements
+                            name: updatedItem.name,
+                            updatedAt: updatedItem.updatedAt,
+                          },
+                        });
+                      })
+                      .catch((error) => reject(error));
+                  })
+                  .catch((error) => reject(error));
+              })
+              .catch((error) => reject(error));
         })
         .catch((error) => reject(error));
     });
@@ -99,43 +99,43 @@ export class UpdateItemResolver {
         .then((item) => {
           if (!item)
             resolve({ message: `item with id = ${id_item} doesn't exist` });
-          this._itemService.itemRepo
-            .save({
-              id: item.id,
-              stock,
-            })
-            .then((updatedItem) => {
-              this._historicService
-                .create_historic({
-                  previousValue: `${item.stock}`,
-                  change: 'Stock',
-                })
-                .then((change) => {
-                  this._historicService
-                    .create_item_relation({
-                      change_id: change.id,
-                      item_id: item.id,
-                    })
-                    .finally(() => {
-                      resolve({
-                        message: 'updated item',
-                        item: {
-                          id: item.id,
-                          name: item.name,
-                          price: item.price,
-                          imageUrl: item.imageUrl,
-                          createdAt: item.createdAt,
-                          // UPDATE elements
-                          stock: updatedItem.stock,
-                          updatedAt: updatedItem.updatedAt,
-                        },
-                      });
-                    })
-                    .catch((error) => reject(error));
-                })
-                .catch((error) => reject(error));
-            })
-            .catch((error) => reject(error));
+          else
+            this._itemService.update_item({
+                id: item.id,
+                stock,
+              })
+              .then((updatedItem) => {
+                this._historicService
+                  .create_historic({
+                    previousValue: `${item.stock}`,
+                    change: 'Stock',
+                  })
+                  .then((change) => {
+                    this._historicService
+                      .create_item_relation({
+                        change_id: change.id,
+                        item_id: item.id,
+                      })
+                      .finally(() => {
+                        resolve({
+                          message: 'updated item',
+                          item: {
+                            id: item.id,
+                            name: item.name,
+                            price: item.price,
+                            imageUrl: item.imageUrl,
+                            createdAt: item.createdAt,
+                            // UPDATE elements
+                            stock: updatedItem.stock,
+                            updatedAt: updatedItem.updatedAt,
+                          },
+                        });
+                      })
+                      .catch((error) => reject(error));
+                  })
+                  .catch((error) => reject(error));
+              })
+              .catch((error) => reject(error));
         })
         .catch((error) => reject(error));
     });
@@ -157,43 +157,43 @@ export class UpdateItemResolver {
         .then((item) => {
           if (!item)
             resolve({ message: `item with id = ${id_item} doesn't exist` });
-          this._itemService.itemRepo
-            .save({
-              id: item.id,
-              price,
-            })
-            .then((updatedItem) => {
-              this._historicService
-                .create_historic({
-                  previousValue: `${item.price}`,
-                  change: 'Price',
-                })
-                .then((change) => {
-                  this._historicService
-                    .create_item_relation({
-                      change_id: change.id,
-                      item_id: item.id,
-                    })
-                    .finally(() => {
-                      resolve({
-                        message: 'updated item',
-                        item: {
-                          id: item.id,
-                          name: item.name,
-                          stock: item.stock,
-                          imageUrl: item.imageUrl,
-                          createdAt: item.createdAt,
-                          // UPDATE elements
-                          price: updatedItem.price,
-                          updatedAt: updatedItem.updatedAt,
-                        },
-                      });
-                    })
-                    .catch((error) => reject(error));
-                })
-                .catch((error) => reject(error));
-            })
-            .catch((error) => reject(error));
+          else
+            this._itemService.update_item({
+                id: item.id,
+                price,
+              })
+              .then((updatedItem) => {
+                this._historicService
+                  .create_historic({
+                    previousValue: `${item.price}`,
+                    change: 'Price',
+                  })
+                  .then((change) => {
+                    this._historicService
+                      .create_item_relation({
+                        change_id: change.id,
+                        item_id: item.id,
+                      })
+                      .finally(() => {
+                        resolve({
+                          message: 'updated item',
+                          item: {
+                            id: item.id,
+                            name: item.name,
+                            stock: item.stock,
+                            imageUrl: item.imageUrl,
+                            createdAt: item.createdAt,
+                            // UPDATE elements
+                            price: updatedItem.price,
+                            updatedAt: updatedItem.updatedAt,
+                          },
+                        });
+                      })
+                      .catch((error) => reject(error));
+                  })
+                  .catch((error) => reject(error));
+              })
+              .catch((error) => reject(error));
         })
         .catch((error) => reject(error));
     });
@@ -215,43 +215,43 @@ export class UpdateItemResolver {
         .then((item) => {
           if (!item)
             resolve({ message: `item with id = ${id_item} doesn't exist` });
-          this._itemService.itemRepo
-            .save({
-              id: item.id,
-              imageUrl,
-            })
-            .then((updatedItem) => {
-              this._historicService
-                .create_historic({
-                  previousValue: `${item.imageUrl}`,
-                  change: 'Image',
-                })
-                .then((change) => {
-                  this._historicService
-                    .create_item_relation({
-                      change_id: change.id,
-                      item_id: item.id,
-                    })
-                    .finally(() => {
-                      resolve({
-                        message: 'updated item',
-                        item: {
-                          id: item.id,
-                          name: item.name,
-                          price: item.price,
-                          stock: item.stock,
-                          createdAt: item.createdAt,
-                          // UPDATE elements
-                          imageUrl: updatedItem.imageUrl,
-                          updatedAt: updatedItem.updatedAt,
-                        },
-                      });
-                    })
-                    .catch((error) => reject(error));
-                })
-                .catch((error) => reject(error));
-            })
-            .catch((error) => reject(error));
+          else
+            this._itemService.update_item({
+                id: item.id,
+                imageUrl,
+              })
+              .then((updatedItem) => {
+                this._historicService
+                  .create_historic({
+                    previousValue: `${item.imageUrl}`,
+                    change: 'Image',
+                  })
+                  .then((change) => {
+                    this._historicService
+                      .create_item_relation({
+                        change_id: change.id,
+                        item_id: item.id,
+                      })
+                      .finally(() => {
+                        resolve({
+                          message: 'updated item',
+                          item: {
+                            id: item.id,
+                            name: item.name,
+                            price: item.price,
+                            stock: item.stock,
+                            createdAt: item.createdAt,
+                            // UPDATE elements
+                            imageUrl: updatedItem.imageUrl,
+                            updatedAt: updatedItem.updatedAt,
+                          },
+                        });
+                      })
+                      .catch((error) => reject(error));
+                  })
+                  .catch((error) => reject(error));
+              })
+              .catch((error) => reject(error));
         })
         .catch((error) => reject(error));
     });
