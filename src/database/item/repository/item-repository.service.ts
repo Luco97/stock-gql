@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { Repository, Brackets, UpdateResult } from 'typeorm';
+import { Repository, Brackets, UpdateResult, DeepPartial } from 'typeorm';
 
 import { ItemEntity } from '../model/item-entity';
 
@@ -93,6 +93,10 @@ export class ItemRepositoryService {
       .take(take || 10)
       .skip(skip * take || 0)
       .getManyAndCount();
+  }
+
+  update_item(update_item: DeepPartial<ItemEntity>): Promise<ItemEntity> {
+    return this._itemRepo.save(update_item);
   }
 
   delete_item(parameters: { item_id: number }): Promise<UpdateResult> {
