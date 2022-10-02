@@ -2,8 +2,9 @@
   "workbench.colorCustomizations": {
     "statusBar.background": "#42a4f5",
     "statusBarItem.hoverBackground": "#1764c0",
-    "activityBar.foreground": "#000",
+    "statusBar.border": "#1764c0",
     "statusBar.foreground": "#000",
-    "statusBar.border": "#1764c0"
+    "activityBar.foreground": "#fff",
+    "activityBar.inactiveForeground": "#000"
   }
 }
