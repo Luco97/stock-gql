@@ -22,10 +22,10 @@ import { LogInResolver } from './user/resolver/log-in.resolver';
 import { SignInResolver } from './user/resolver/sign-in.resolver';
 
 // Items resolvers
-import { CreateItemResolver } from './item/resolver/create-item.resolver';
-import { ReadItemResolver } from './item/resolver/read-item.resolver';
-import { UpdateItemResolver } from './item/resolver/update-item.resolver';
-import { DeleteItemResolver } from './item/resolver/delete-item.resolver';
+import { CreateItemResolver } from './item/resolvers/create-item.resolver';
+import { ReadItemResolver } from './item/resolvers/read-item.resolver';
+import { UpdateItemResolver } from './item/resolvers/update-item.resolver';
+import { DeleteItemResolver } from './item/resolvers/delete-item.resolver';
 
 // Historic resolvers
 import { ReadHistoricResolver } from './historic/resolver/read-historic.resolver';
