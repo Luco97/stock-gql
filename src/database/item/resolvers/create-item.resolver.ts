@@ -22,7 +22,7 @@ export class CreateItemResolver {
   })
   @UseGuards(AuthGuard)
   async create(
-    @Args('paginate', { nullable: true }) createInput: CreateInput,
+    @Args('item', { nullable: true }) createInput: CreateInput,
     @Context() context,
   ): Promise<ItemEntity> {
     const req: Request = context.req;
