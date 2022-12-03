@@ -10,11 +10,14 @@ import {
   UpdatePriceInput,
   UpdateStockInput,
 } from '../inputs/update.input';
+import { Update } from '../inputs/update.input';
 import { AuthService } from '@Shared/auth';
 import { ItemEntity } from '../model/item-entity';
 import { RoleGuard } from '../../guards/role.guard';
 import { ChangeOutput } from '../outputs/change.output';
+import { HistoricEntity } from '../../historic/model/historic-entity';
 import { ItemRepositoryService } from '../repository/item-repository.service';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { HistoricRepositoryService } from '../../historic/repository/historic-repository.service';
 
 @Resolver()
@@ -42,7 +45,8 @@ export class UpdateItemResolver {
           if (!item)
             resolve({ message: `item with id = ${id_item} doesn't exist` });
           else
-            this._itemService.update_item({
+            this._itemService
+              .update_item({
                 id: item.id,
                 name,
               })
@@ -100,7 +104,8 @@ export class UpdateItemResolver {
           if (!item)
             resolve({ message: `item with id = ${id_item} doesn't exist` });
           else
-            this._itemService.update_item({
+            this._itemService
+              .update_item({
                 id: item.id,
                 stock,
               })
@@ -158,7 +163,8 @@ export class UpdateItemResolver {
           if (!item)
             resolve({ message: `item with id = ${id_item} doesn't exist` });
           else
-            this._itemService.update_item({
+            this._itemService
+              .update_item({
                 id: item.id,
                 price,
               })
@@ -216,7 +222,8 @@ export class UpdateItemResolver {
           if (!item)
             resolve({ message: `item with id = ${id_item} doesn't exist` });
           else
-            this._itemService.update_item({
+            this._itemService
+              .update_item({
                 id: item.id,
                 imageUrl,
               })
@@ -319,5 +326,93 @@ export class UpdateItemResolver {
     //     ),
     //   )
     //   .getOne();
+  }
+
+  @Mutation(() => ChangeOutput, {
+    name: 'update_item',
+    description: 'update the image of one item',
+  })
+  @SetMetadata('roles', ['basic', 'admin'])
+  @UseGuards(RoleGuard)
+  async update(
+    @Args('item') itemUpdate: Update,
+    @Context() context,
+  ): Promise<ChangeOutput> {
+    const { id_item, imageUrl, name, price, stock } = itemUpdate;
+    return new Promise<ChangeOutput>((resolve, reject) => {
+      const changes: string[] = [];
+      const updateItem: QueryDeepPartialEntity<ItemEntity> = {};
+      if (name) {
+        updateItem['name'] = name;
+        changes.push('name');
+      }
+      if (price) {
+        updateItem['price'] = price;
+        changes.push('price');
+      }
+      if (stock) {
+        updateItem['stock'] = stock;
+        changes.push('stock');
+      }
+      if (imageUrl) {
+        updateItem['imageUrl'] = imageUrl;
+        changes.push('imageUrl');
+      }
+
+      if (!changes.length) resolve({ message: `nothing to change` });
+      else {
+        this.getItem({ id_item }, context).then((item) => {
+          if (!item)
+            resolve({ message: `item with id = ${id_item} doesn't exist` });
+          else {
+            const historicPromises = changes.map<Promise<HistoricEntity>>(
+              (element) =>
+                this._historicService.create_historic({
+                  change: element,
+                  previousValue: `${item[element]}`,
+                }),
+            );
+            // const historicPromises: Promise<HistoricEntity>[] = [];
+            // changes.forEach((element) =>
+            //   historicPromises.push(
+            //     this._historicService.create_historic({
+            //       change: element,
+            //       previousValue: `${item[element]}`,
+            //     }),
+            //   ),
+            // );
+            this._itemService.update(id_item, updateItem).then(() => {
+              Promise.all(historicPromises).then((changesEntity) => {
+                const changesRelations = changesEntity.map<Promise<void>>(
+                  (element) =>
+                    this._historicService.create_item_relation({
+                      item_id: id_item,
+                      change_id: element.id,
+                    }),
+                );
+                // const changesRelations: Promise<void>[] = [];
+                // changesEntity.forEach((element) =>
+                //   changesRelations.push(
+                //     this._historicService.create_item_relation({
+                //       item_id: id_item,
+                //       change_id: element.id,
+                //     }),
+                //   ),
+                // );
+                changes.forEach(
+                  (element) => (item[element] = updateItem[element]),
+                );
+                Promise.all(changesRelations).finally(() =>
+                  resolve({
+                    message: 'updated item',
+                    item,
+                  }),
+                );
+              });
+            });
+          }
+        });
+      }
+    });
   }
 }
