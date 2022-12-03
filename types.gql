@@ -166,7 +166,7 @@ type Mutation {
   sign_in(user: log_in!): LogInOutput!
 
   """mutation for item creation"""
-  create_item(paginate: create_item): ItemEntity!
+  create_item(item: create_item): ItemEntity!
 
   """update name of item mutation"""
   update_name_item(item: update_name!): ChangeOutput!
@@ -179,6 +179,9 @@ type Mutation {
 
   """update the image of one item"""
   update_image_item(item: update_image!): ChangeOutput!
+
+  """update the image of one item"""
+  update_item(item: update_item!): ChangeOutput!
 
   """delete item mutation, only role 'admin' can delete items"""
   delete_item(id_item: Float!): ChangeOutput!
@@ -242,4 +245,21 @@ input update_price {
 input update_image {
   """new imageURL in item"""
   imageUrl: String!
+}
+
+input update_item {
+  """item ID"""
+  id_item: Float!
+
+  """new price in item"""
+  price: Float
+
+  """new stock in item"""
+  stock: Float
+
+  """new imageURL in item"""
+  imageUrl: String
+
+  """new name in item"""
+  name: String
 }
