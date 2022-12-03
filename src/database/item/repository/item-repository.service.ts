@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { Repository, Brackets, UpdateResult, DeepPartial } from 'typeorm';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 import { ItemEntity } from '../model/item-entity';
 
@@ -93,6 +94,13 @@ export class ItemRepositoryService {
 
   update_item(update_item: DeepPartial<ItemEntity>): Promise<ItemEntity> {
     return this._itemRepo.save(update_item);
+  }
+
+  update(
+    item_id: number,
+    partialUpdate: QueryDeepPartialEntity<ItemEntity>,
+  ): Promise<UpdateResult> {
+    return this._itemRepo.update({ id: item_id }, partialUpdate);
   }
 
   delete_item(parameters: { item_id: number }): Promise<UpdateResult> {
