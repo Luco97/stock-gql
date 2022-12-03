@@ -372,15 +372,6 @@ export class UpdateItemResolver {
                   previousValue: `${item[element]}`,
                 }),
             );
-            // const historicPromises: Promise<HistoricEntity>[] = [];
-            // changes.forEach((element) =>
-            //   historicPromises.push(
-            //     this._historicService.create_historic({
-            //       change: element,
-            //       previousValue: `${item[element]}`,
-            //     }),
-            //   ),
-            // );
             this._itemService.update(id_item, updateItem).then(() => {
               Promise.all(historicPromises).then((changesEntity) => {
                 const changesRelations = changesEntity.map<Promise<void>>(
@@ -390,15 +381,6 @@ export class UpdateItemResolver {
                       change_id: element.id,
                     }),
                 );
-                // const changesRelations: Promise<void>[] = [];
-                // changesEntity.forEach((element) =>
-                //   changesRelations.push(
-                //     this._historicService.create_item_relation({
-                //       item_id: id_item,
-                //       change_id: element.id,
-                //     }),
-                //   ),
-                // );
                 changes.forEach(
                   (element) => (item[element] = updateItem[element]),
                 );
