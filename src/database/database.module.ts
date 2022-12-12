@@ -20,6 +20,7 @@ import { HistoricRepositoryService } from './historic/repository/historic-reposi
 // User resolvers
 import { LogInResolver } from './user/resolver/log-in.resolver';
 import { SignInResolver } from './user/resolver/sign-in.resolver';
+import { ValidateResolver } from './user/resolver/validate.resolver';
 
 // Items resolvers
 import { CreateItemResolver } from './item/resolvers/create-item.resolver';
@@ -59,8 +60,8 @@ import { ReadHistoricResolver } from './historic/resolver/read-historic.resolver
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: 'types.gql',
-      persistedQueries: false,  // heroku deploy
-      cache: 'bounded',         // heroku deploy
+      persistedQueries: false, // heroku deploy
+      cache: 'bounded', // heroku deploy
     }),
     AuthModule,
   ],
@@ -75,6 +76,7 @@ import { ReadHistoricResolver } from './historic/resolver/read-historic.resolver
     DeleteItemResolver,
     HistoricRepositoryService,
     ReadHistoricResolver,
+    ValidateResolver,
   ],
 })
 export class DatabaseModule {}
