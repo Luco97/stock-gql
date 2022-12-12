@@ -108,6 +108,15 @@ type HistoricOutput {
   count: Float!
 }
 
+type ValidateOutput {
+  """status response"""
+  status: Float!
+
+  """message for extra info"""
+  message: String!
+  isValid: Boolean!
+}
+
 type Query {
   """
   find all items query, user gets only their items & admin gets all from 'basic' users and their items
@@ -185,6 +194,8 @@ type Mutation {
 
   """delete item mutation, only role 'admin' can delete items"""
   delete_item(id_item: Float!): ChangeOutput!
+  validateToken: ValidateOutput!
+  validateTypeBasic(type: String!): ValidateOutput!
 }
 
 """register object for user creation"""
