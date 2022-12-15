@@ -1,4 +1,4 @@
-import { SetMetadata, UseGuards } from '@nestjs/common';
+import { SetMetadata, UseGuards, UseInterceptors } from '@nestjs/common';
 import { Args, Context, Query, Resolver } from '@nestjs/graphql';
 
 import { Request } from 'express';
@@ -9,6 +9,7 @@ import { ItemEntity } from '../model/item-entity';
 import { RoleGuard } from '../../guards/role.guard';
 import { ItemsOutput } from '../outputs/items.output';
 import { ItemRepositoryService } from '../repository/item-repository.service';
+import { TransformTokenInterceptor } from '../interceptors/transform-token.interceptor';
 
 @Resolver()
 export class ReadItemResolver {
@@ -24,6 +25,7 @@ export class ReadItemResolver {
   })
   @SetMetadata('roles', ['basic', 'admin'])
   @UseGuards(RoleGuard)
+  @UseInterceptors(TransformTokenInterceptor)
   async findAll(
     @Args('paginate', {
       nullable: true,
