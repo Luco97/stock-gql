@@ -81,6 +81,15 @@ type LogInOutput {
   token: String
 }
 
+type ValidateOutput {
+  """status response"""
+  status: Float!
+
+  """message for extra info"""
+  message: String!
+  isValid: Boolean!
+}
+
 """response in find_all query"""
 type ItemsOutput {
   """array with the items"""
@@ -106,15 +115,6 @@ type HistoricOutput {
 
   """quantity of changes in item"""
   count: Float!
-}
-
-type ValidateOutput {
-  """status response"""
-  status: Float!
-
-  """message for extra info"""
-  message: String!
-  isValid: Boolean!
 }
 
 type Query {
