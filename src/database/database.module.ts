@@ -1,5 +1,6 @@
 // Modules
 import { Module } from '@nestjs/common';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -77,6 +78,10 @@ import { ReadHistoricResolver } from './historic/resolver/read-historic.resolver
     HistoricRepositoryService,
     ReadHistoricResolver,
     ValidateResolver,
+    // {
+    //   provide: APP_INTERCEPTOR,
+    //   useClass: TransformTokenInterceptor,
+    // },
   ],
 })
 export class DatabaseModule {}
