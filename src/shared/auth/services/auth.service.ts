@@ -28,8 +28,7 @@ export class AuthService {
   validateToken(token: string): boolean {
     try {
       const validation = this.verify(token);
-      if (validation.context.username && validation.context.extra)
-        return true;
+      if (validation.context.username && validation.context.extra) return true;
     } catch (error) {
       return false;
     }
@@ -52,6 +51,20 @@ export class AuthService {
         return payload?.context?.type;
     } catch (error) {
       return '';
+    }
+  }
+
+  getContext(token: string): { id?: number; name?: string; type?: string } {
+    try {
+      const payload = this.verify(token);
+      if (payload.context.username && payload.context.extra)
+        return {
+          id: payload.context.extra,
+          type: payload.context.type,
+          name: payload.context.username,
+        };
+    } catch (error) {
+      return {};
     }
   }
 }
