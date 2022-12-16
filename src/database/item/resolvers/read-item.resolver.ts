@@ -74,6 +74,7 @@ export class ReadItemResolver {
   })
   @SetMetadata('roles', ['basic', 'admin'])
   @UseGuards(RoleGuard)
+  @UseInterceptors(TransformTokenInterceptor)
   async findOne(
     @Args('id') id_item: number,
     @Context() context,
