@@ -1,35 +1,35 @@
-import { UseGuards } from '@nestjs/common';
+import { UseGuards, UseInterceptors } from '@nestjs/common';
 import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
 
 import { Request } from 'express';
 
-import { AuthService } from '@Shared/auth';
 import { ItemEntity } from '../model/item-entity';
 import { AuthGuard } from '../../guards/auth.guard';
 import { CreateInput } from '../inputs/create.input';
 import { ItemRepositoryService } from '../repository/item-repository.service';
+import { TransformTokenInterceptor } from '../interceptors/transform-token.interceptor';
 
 @Resolver()
 export class CreateItemResolver {
-  constructor(
-    private _authService: AuthService,
-    private _itemService: ItemRepositoryService,
-  ) {}
+  constructor(private _itemService: ItemRepositoryService) {}
 
   @Mutation(() => ItemEntity, {
     name: 'create_item',
     description: 'mutation for item creation',
   })
   @UseGuards(AuthGuard)
+  @UseInterceptors(TransformTokenInterceptor)
   async create(
     @Args('item', { nullable: true }) createInput: CreateInput,
     @Context() context,
   ): Promise<ItemEntity> {
     const req: Request = context.req;
-    const token: string = req.headers?.authorization;
+
+    // interceptor values (always in)
+    const type: string = req.header('user_type');
+    const id_user = +req.header('user_id');
 
     const { name, imageUrl, stock, price } = createInput;
-    const id_user = this._authService.userID(token);
     return new Promise<ItemEntity>((resolve, reject) => {
       this._itemService
         .create_item({ name, imageUrl, price, stock })
