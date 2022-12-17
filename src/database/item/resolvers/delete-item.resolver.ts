@@ -1,19 +1,16 @@
-import { SetMetadata, UseGuards } from '@nestjs/common';
+import { SetMetadata, UseGuards, UseInterceptors } from '@nestjs/common';
 import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
 
 import { Request } from 'express';
 
-import { AuthService } from '@Shared/auth';
 import { RoleGuard } from '../../guards/role.guard';
 import { ChangeOutput } from '../outputs/change.output';
 import { ItemRepositoryService } from '../repository/item-repository.service';
+import { TransformTokenInterceptor } from '../interceptors/transform-token.interceptor';
 
 @Resolver()
 export class DeleteItemResolver {
-  constructor(
-    private _authService: AuthService,
-    private _itemService: ItemRepositoryService,
-  ) {}
+  constructor(private _itemService: ItemRepositoryService) {}
 
   @Mutation(() => ChangeOutput, {
     name: 'delete_item',
@@ -21,13 +18,17 @@ export class DeleteItemResolver {
   })
   @SetMetadata('roles', ['admin'])
   @UseGuards(RoleGuard)
+  @UseInterceptors(TransformTokenInterceptor)
   async delete(
     @Args('id_item', { name: 'id_item' }) id: number,
     @Context() context,
   ): Promise<ChangeOutput> {
     const req: Request = context.req;
-    const token: string = req.headers?.authorization;
-    const adminID: number = this._authService.userID(token);
+
+    // interceptor values (always in)
+    const id_user = +req.header('user_id');
+    const adminID: number = id_user;
+
     return new Promise<ChangeOutput>((resolve, reject) => {
       this._itemService
         .find_one_item({
