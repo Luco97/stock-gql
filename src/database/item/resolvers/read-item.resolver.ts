@@ -38,9 +38,13 @@ export class ReadItemResolver {
     @Context() context,
   ): Promise<ItemsOutput> {
     const req: Request = context.req;
-    const token: string = req.headers?.authorization;
-    const type: string = this._authService.userType(token);
-    const id_user = this._authService.userID(token);
+    // const token: string = req.headers?.authorization;
+    // const type: string = this._authService.userType(token);
+    // const id_user = this._authService.userID(token);
+
+    const type: string = req.header('user_type');
+    const id_user = +req.header('user_id');
+
     const { order, orderBy, skip, take } = getInput;
     return new Promise<ItemsOutput>((resolve, reject) => {
       let itemsPromise: Promise<[ItemEntity[], number]>;
