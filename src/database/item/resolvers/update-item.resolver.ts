@@ -1,4 +1,4 @@
-import { SetMetadata, UseGuards } from '@nestjs/common';
+import { SetMetadata, UseGuards, UseInterceptors } from '@nestjs/common';
 import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
 
 import { Request } from 'express';
@@ -11,7 +11,6 @@ import {
   UpdateStockInput,
 } from '../inputs/update.input';
 import { Update } from '../inputs/update.input';
-import { AuthService } from '@Shared/auth';
 import { ItemEntity } from '../model/item-entity';
 import { RoleGuard } from '../../guards/role.guard';
 import { ChangeOutput } from '../outputs/change.output';
@@ -19,11 +18,11 @@ import { HistoricEntity } from '../../historic/model/historic-entity';
 import { ItemRepositoryService } from '../repository/item-repository.service';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { HistoricRepositoryService } from '../../historic/repository/historic-repository.service';
+import { TransformTokenInterceptor } from '../interceptors/transform-token.interceptor';
 
 @Resolver()
 export class UpdateItemResolver {
   constructor(
-    private _authService: AuthService,
     private _itemService: ItemRepositoryService,
     private _historicService: HistoricRepositoryService,
   ) {}
@@ -34,13 +33,20 @@ export class UpdateItemResolver {
   })
   @SetMetadata('roles', ['basic', 'admin'])
   @UseGuards(RoleGuard)
+  @UseInterceptors(TransformTokenInterceptor)
   async updateName(
     @Args('item') itemNameUpdate: UpdateNameInput,
     @Context() context,
   ): Promise<ChangeOutput> {
+    const req: Request = context.req;
+
+    // interceptor values (always in)
+    const type: string = req.header('user_type');
+    const id_user = +req.header('user_id');
+
     const { id_item, name } = itemNameUpdate;
     return new Promise<ChangeOutput>((resolve, reject) => {
-      this.getItem({ id_item }, context)
+      this.getItem({ id_item }, { id_user, type })
         .then((item) => {
           if (!item)
             resolve({ message: `item with id = ${id_item} doesn't exist` });
@@ -93,13 +99,20 @@ export class UpdateItemResolver {
   })
   @SetMetadata('roles', ['basic', 'admin'])
   @UseGuards(RoleGuard)
+  @UseInterceptors(TransformTokenInterceptor)
   async updateStock(
     @Args('item') itemNameUpdate: UpdateStockInput,
     @Context() context,
   ): Promise<ChangeOutput> {
+    const req: Request = context.req;
+
+    // interceptor values (always in)
+    const type: string = req.header('user_type');
+    const id_user = +req.header('user_id');
+
     const { id_item, stock } = itemNameUpdate;
     return new Promise<ChangeOutput>((resolve, reject) => {
-      this.getItem({ id_item }, context)
+      this.getItem({ id_item }, { id_user, type })
         .then((item) => {
           if (!item)
             resolve({ message: `item with id = ${id_item} doesn't exist` });
@@ -152,13 +165,20 @@ export class UpdateItemResolver {
   })
   @SetMetadata('roles', ['basic', 'admin'])
   @UseGuards(RoleGuard)
+  @UseInterceptors(TransformTokenInterceptor)
   async updatePrice(
     @Args('item') itemNameUpdate: UpdatePriceInput,
     @Context() context,
   ): Promise<ChangeOutput> {
+    const req: Request = context.req;
+
+    // interceptor values (always in)
+    const type: string = req.header('user_type');
+    const id_user = +req.header('user_id');
+
     const { id_item, price } = itemNameUpdate;
     return new Promise<ChangeOutput>((resolve, reject) => {
-      this.getItem({ id_item }, context)
+      this.getItem({ id_item }, { id_user, type })
         .then((item) => {
           if (!item)
             resolve({ message: `item with id = ${id_item} doesn't exist` });
@@ -211,13 +231,20 @@ export class UpdateItemResolver {
   })
   @SetMetadata('roles', ['basic', 'admin'])
   @UseGuards(RoleGuard)
+  @UseInterceptors(TransformTokenInterceptor)
   async updateImage(
     @Args('item') itemNameUpdate: UpdateImageInput,
     @Context() context,
   ): Promise<ChangeOutput> {
+    const req: Request = context.req;
+
+    // interceptor values (always in)
+    const type: string = req.header('user_type');
+    const id_user = +req.header('user_id');
+
     const { id_item, imageUrl } = itemNameUpdate;
     return new Promise<ChangeOutput>((resolve, reject) => {
-      this.getItem({ id_item }, context)
+      this.getItem({ id_item }, { id_user, type })
         .then((item) => {
           if (!item)
             resolve({ message: `item with id = ${id_item} doesn't exist` });
@@ -264,12 +291,12 @@ export class UpdateItemResolver {
     });
   }
 
-  async getItem(itemUpdate: UpdateInput, context): Promise<ItemEntity> {
-    const req: Request = context.req;
-    const token: string = req.headers?.authorization;
-    const type: string = this._authService.userType(token);
+  async getItem(
+    itemUpdate: UpdateInput,
+    userInfo: { type: string; id_user: number },
+  ): Promise<ItemEntity> {
+    const { id_user, type } = userInfo;
     const { id_item } = itemUpdate;
-    const id_user = this._authService.userID(token);
     let item: Promise<ItemEntity>;
     if (type == 'basic')
       item = this._itemService.find_one_item({
@@ -334,10 +361,17 @@ export class UpdateItemResolver {
   })
   @SetMetadata('roles', ['basic', 'admin'])
   @UseGuards(RoleGuard)
+  @UseInterceptors(TransformTokenInterceptor)
   async update(
     @Args('item') itemUpdate: Update,
     @Context() context,
   ): Promise<ChangeOutput> {
+    const req: Request = context.req;
+
+    // interceptor values (always in)
+    const type: string = req.header('user_type');
+    const id_user = +req.header('user_id');
+
     const { id_item, imageUrl, name, price, stock } = itemUpdate;
     return new Promise<ChangeOutput>((resolve, reject) => {
       const changes: string[] = [];
@@ -361,7 +395,7 @@ export class UpdateItemResolver {
 
       if (!changes.length) resolve({ message: `nothing to change` });
       else {
-        this.getItem({ id_item }, context).then((item) => {
+        this.getItem({ id_item }, { id_user, type }).then((item) => {
           if (!item)
             resolve({ message: `item with id = ${id_item} doesn't exist` });
           else {
