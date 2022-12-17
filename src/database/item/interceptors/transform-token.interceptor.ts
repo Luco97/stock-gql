@@ -18,9 +18,13 @@ export class TransformTokenInterceptor implements NestInterceptor {
     const { id, name, type } = this._authService.getContext(
       req.headers?.authorization,
     );
-    req.res.setHeader('user_id', id);
-    req.res.setHeader('user_name', name);
-    req.res.setHeader('user_type', type);
+    // context.getArgByIndex(2).req.res.set('user_id', id.toString());
+    // context.getArgByIndex(2).req.res.set('user_name', name);
+    // context.getArgByIndex(2).req.res.set('user_type', type);
+    req.headers['user_id'] = id.toString();
+    req.headers['user_name'] = name;
+    req.headers['user_type'] = type;
+
     // req.res.setHeader(
     //   'aaa',
     //   this._authService.userType(req.headers?.authorization),
