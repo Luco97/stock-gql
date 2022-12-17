@@ -3,7 +3,6 @@ import { Args, Context, Query, Resolver } from '@nestjs/graphql';
 
 import { Request } from 'express';
 
-import { AuthService } from '@Shared/auth';
 import { ReadInput } from '../inputs/read.input';
 import { ItemEntity } from '../model/item-entity';
 import { RoleGuard } from '../../guards/role.guard';
@@ -13,10 +12,7 @@ import { TransformTokenInterceptor } from '../interceptors/transform-token.inter
 
 @Resolver()
 export class ReadItemResolver {
-  constructor(
-    private _authService: AuthService,
-    private _itemService: ItemRepositoryService,
-  ) {}
+  constructor(private _itemService: ItemRepositoryService) {}
 
   @Query(() => ItemsOutput, {
     name: 'find_all',
@@ -38,10 +34,8 @@ export class ReadItemResolver {
     @Context() context,
   ): Promise<ItemsOutput> {
     const req: Request = context.req;
-    // const token: string = req.headers?.authorization;
-    // const type: string = this._authService.userType(token);
-    // const id_user = this._authService.userID(token);
 
+    // interceptor values (always in)
     const type: string = req.header('user_type');
     const id_user = +req.header('user_id');
 
@@ -84,9 +78,11 @@ export class ReadItemResolver {
     @Context() context,
   ): Promise<ItemEntity> {
     const req: Request = context.req;
-    const token: string = req.headers?.authorization;
-    const type: string = this._authService.userType(token);
-    const id_user = this._authService.userID(token);
+
+    // interceptor values (always in)
+    const type: string = req.header('user_type');
+    const id_user = +req.header('user_id');
+
     if (type == 'basic')
       return this._itemService.find_one_item({
         id_item,
