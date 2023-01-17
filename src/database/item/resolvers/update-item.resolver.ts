@@ -399,12 +399,13 @@ export class UpdateItemResolver {
           if (!item)
             resolve({ message: `item with id = ${id_item} doesn't exist` });
           else {
-            const historicPromises: Promise<HistoricEntity>[] = changes.map<Promise<HistoricEntity>>(
-              (element) =>
-                this._historicService.create_historic({
-                  change: element,
-                  previousValue: `${item[element]}`,
-                }),
+            const historicPromises: Promise<HistoricEntity>[] = changes.map<
+              Promise<HistoricEntity>
+            >((element) =>
+              this._historicService.create_historic({
+                change: element,
+                previousValue: `${item[element]}`,
+              }),
             );
             this._itemService.update(id_item, updateItem).then(() => {
               Promise.all(historicPromises).then((changesEntity) => {
