@@ -52,14 +52,7 @@ type ItemEntity {
 
 """user entity table"""
 type UserEntity {
-  id: ID!
-  email: String!
   username: String!
-
-  """user pass never avalible for admins"""
-  password: String
-  type: String!
-  items: [ItemEntity!]
 }
 
 """output object of register_user"""
@@ -132,6 +125,9 @@ type Query {
   find one item, if user role is 'basic' response with his item, if user role is 'admin' response with one item from 'basic' users OR his item
   """
   find_one_item(id: Float!): ItemEntity
+
+  """some randoms to show in home or somewhere"""
+  find_some_randoms: ItemEntity
 
   """find All changes of one item where id == 'itemId' """
   item_changes(itemId: find_all_changes!): HistoricOutput!
