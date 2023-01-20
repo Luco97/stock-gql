@@ -14,11 +14,11 @@ import { ItemEntity } from '../../item/model/item-entity';
 @Entity()
 @ObjectType({ description: 'user entity table' })
 export class UserEntity {
-  @Field(() => ID)
+  // @Field(() => ID)
   @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @Field(() => String)
+  // @Field(() => String)
   @Column({ type: 'varchar' })
   email: string;
 
@@ -26,18 +26,18 @@ export class UserEntity {
   @Column({ type: 'varchar' })
   username: string;
 
-  @Field(() => String, {
-    nullable: true,
-    description: 'user pass never avalible for admins',
-  })
+  // @Field(() => String, {
+  //   nullable: true,
+  //   description: 'user pass never avalible for admins',
+  // })
   @Column({ type: 'varchar', select: false })
   password: string;
 
-  @Field(() => String)
+  // @Field(() => String)
   @Column({ type: 'varchar', default: 'basic' })
   type: string;
 
-  @Field(() => [ItemEntity], { nullable: true })
+  // @Field(() => [ItemEntity], { nullable: true })
   @OneToMany(() => ItemEntity, (items) => items.user)
   items: ItemEntity[];
 
