@@ -54,27 +54,12 @@ export class ItemRepositoryService {
       .set(id_user);
   }
 
-  find_all_random(parameters: {
-    skip: number;
-    take: number;
-    orderBy: string;
-    order: 'ASC' | 'DESC';
-  }): Promise<ItemEntity[]> {
-    const { order, orderBy, skip, take } = parameters;
+  find_random(): Promise<ItemEntity> {
     return this._itemRepo
       .createQueryBuilder('item')
       .leftJoinAndSelect('item.user', 'user')
-      .orderBy(
-        `items.${
-          ['name', 'stock', 'createdAt', 'updateAt'].includes(orderBy)
-            ? orderBy
-            : 'createdAt'
-        }`,
-        ['ASC', 'DESC'].includes(order) ? order : 'ASC',
-      )
-      .take(take || 10)
-      .skip(skip * take || 0)
-      .getMany();
+      .orderBy('RANDOM()')
+      .getOne();
   }
 
   find_one_item(parameters: {
