@@ -94,4 +94,28 @@ export class ReadItemResolver {
         id_user: this._itemService.admin_condition(id_user),
       });
   }
+
+  @Query(() => ItemEntity, {
+    nullable: true,
+    name: 'find_some_randoms',
+    description: 'some randoms to show in home or somewhere',
+  })
+  async findRandoms(): Promise<ItemEntity[]> {
+    const NAMES: string[] = ['User'];
+    return new Promise<ItemEntity[]>((resolve, reject) => {
+      Promise.all([
+        this._itemService.find_random(),
+        this._itemService.find_random(),
+        this._itemService.find_random(),
+        this._itemService.find_random(),
+        this._itemService.find_random(),
+      ]).then((itemArray) => {
+        const items: ItemEntity[] = itemArray.map<ItemEntity>((item, index) => {
+          item.name = `User ${(item.id * item.name.length) % 100}`;
+          return item;
+        });
+        resolve(items);
+      });
+    });
+  }
 }
