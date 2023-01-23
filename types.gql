@@ -173,18 +173,6 @@ type Mutation {
   """mutation for item creation"""
   create_item(item: create_item): ItemEntity!
 
-  """update name of item mutation"""
-  update_name_item(item: update_name!): ChangeOutput!
-
-  """update stock of one item mutation"""
-  update_stock_item(item: update_stock!): ChangeOutput!
-
-  """update price of one item"""
-  update_price_item(item: update_price!): ChangeOutput!
-
-  """update the image of one item"""
-  update_image_item(item: update_image!): ChangeOutput!
-
   """update the image of one item"""
   update_item(item: update_item!): ChangeOutput!
 
@@ -228,30 +216,6 @@ input create_item {
 
   """Price of the item"""
   price: Float = 0
-}
-
-"""update name class"""
-input update_name {
-  """new name in item"""
-  name: String!
-}
-
-"""update stock class"""
-input update_stock {
-  """new stock in item"""
-  stock: Float!
-}
-
-"""update price class"""
-input update_price {
-  """new price in item"""
-  price: Float!
-}
-
-"""update imageURL class"""
-input update_image {
-  """new imageURL in item"""
-  imageUrl: String!
 }
 
 input update_item {
