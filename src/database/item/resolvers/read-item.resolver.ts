@@ -64,7 +64,7 @@ export class ReadItemResolver {
     });
   }
 
-  @Query(() => ItemEntity, {
+  @Query(() => [ItemEntity], {
     nullable: true,
     name: 'find_one_item',
     description:
@@ -109,10 +109,9 @@ export class ReadItemResolver {
         this._itemService.find_random(),
         this._itemService.find_random(),
         this._itemService.find_random(),
-      ]).then((itemArray) => {
-        const items: ItemEntity[] = itemArray.map<ItemEntity>((item, index) => {
-          item.name = `User ${(item.id * item.name.length) % 100}`;
-          return item;
+      ]).then((items) => {
+        items.forEach((item, index) => {
+          item.name = `User ${index + 1}`;
         });
         resolve(items);
       });
