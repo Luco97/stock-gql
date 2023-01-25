@@ -1,6 +1,13 @@
 import { Field, InputType } from '@nestjs/graphql';
 
-import { IsOptional, IsUrl, Min, MinLength } from 'class-validator';
+import {
+  ArrayMinSize,
+  IsArray,
+  IsOptional,
+  IsUrl,
+  Min,
+  MinLength,
+} from 'class-validator';
 
 export class UpdateInput {
   @Field(() => Number, {
@@ -37,4 +44,18 @@ export class Update {
   @IsOptional()
   @MinLength(5)
   name: string;
+}
+
+@InputType('update_tags')
+export class UpdateTags {
+  @Field(() => Number, {
+    description: 'item ID',
+  })
+  @Min(1)
+  id_item: number;
+
+  @Field(() => [Number], { description: 'new tags', nullable: false })
+  @IsArray()
+  @ArrayMinSize(1)
+  tags_id: number[];
 }
