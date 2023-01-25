@@ -14,6 +14,7 @@ import { ItemEntity } from './item/model/item-entity';
 import { HistoricEntity } from './historic/model/historic-entity';
 
 // Services
+import { TagRepositoryService } from './tag/repository/tag-repository.service';
 import { ItemRepositoryService } from './item/repository/item-repository.service';
 import { UserRepositoryService } from './user/repository/user-repository.service';
 import { HistoricRepositoryService } from './historic/repository/historic-repository.service';
@@ -78,6 +79,7 @@ import { ReadHistoricResolver } from './historic/resolver/read-historic.resolver
     HistoricRepositoryService,
     ReadHistoricResolver,
     ValidateResolver,
+    TagRepositoryService,
     // {
     //   provide: APP_INTERCEPTOR,
     //   useClass: TransformTokenInterceptor,
