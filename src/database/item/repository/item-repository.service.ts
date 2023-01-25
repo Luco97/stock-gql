@@ -58,6 +58,10 @@ export class ItemRepositoryService {
     return this._itemRepo
       .createQueryBuilder('item')
       .leftJoinAndSelect('item.user', 'user')
+      .leftJoinAndSelect('items.tags', 'tags')
+      .loadRelationCountAndMap('tags.item_count', 'tags.items', 'chips', (qb) =>
+        qb.orderBy('cnt'),
+      )
       .orderBy('RANDOM()')
       .getOne();
   }
@@ -70,6 +74,10 @@ export class ItemRepositoryService {
     return this._itemRepo
       .createQueryBuilder('item')
       .leftJoin('item.user', 'user')
+      .leftJoinAndSelect('item.tags', 'tags')
+      .loadRelationCountAndMap('tags.item_count', 'tags.items', 'chips', (qb) =>
+        qb.orderBy('cnt'),
+      )
       .where('item.id = :id_item', { id_item })
       .andWhere(id_user)
       .getOne();
@@ -86,6 +94,10 @@ export class ItemRepositoryService {
     return this._itemRepo
       .createQueryBuilder('items')
       .leftJoinAndSelect('items.user', 'user')
+      .leftJoinAndSelect('items.tags', 'tags')
+      .loadRelationCountAndMap('tags.item_count', 'tags.items', 'chips', (qb) =>
+        qb.orderBy('cnt'),
+      )
       .where(id_user)
       .orderBy(
         `items.${
@@ -109,6 +121,15 @@ export class ItemRepositoryService {
     partialUpdate: QueryDeepPartialEntity<ItemEntity>,
   ): Promise<UpdateResult> {
     return this._itemRepo.update({ id: item_id }, partialUpdate);
+  }
+
+  update_tags(id: number, tagsIn: number[], tagsOut: number[]): Promise<void> {
+    return this._itemRepo
+      .createQueryBuilder('item')
+      .relation('tags')
+      .comment('add tags')
+      .of(id)
+      .addAndRemove(tagsIn, tagsOut);
   }
 
   delete_item(parameters: { item_id: number }): Promise<UpdateResult> {
