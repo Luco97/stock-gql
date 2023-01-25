@@ -33,6 +33,11 @@ import { DeleteItemResolver } from './item/resolvers/delete-item.resolver';
 // Historic resolvers
 import { ReadHistoricResolver } from './historic/resolver/read-historic.resolver';
 
+// Tags resolvers
+import { ReadResolver } from './tag/resolvers/read.resolver';
+import { CreateResolver } from './tag/resolvers/create.resolver';
+import { UpdateResolver } from './tag/resolvers/update.resolver';
+
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
@@ -80,6 +85,9 @@ import { ReadHistoricResolver } from './historic/resolver/read-historic.resolver
     ReadHistoricResolver,
     ValidateResolver,
     TagRepositoryService,
+    ReadResolver,
+    CreateResolver,
+    UpdateResolver,
     // {
     //   provide: APP_INTERCEPTOR,
     //   useClass: TransformTokenInterceptor,
