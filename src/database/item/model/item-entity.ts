@@ -5,6 +5,8 @@ import {
   Entity,
   ManyToOne,
   OneToMany,
+  JoinTable,
+  ManyToMany,
   CreateDateColumn,
   DeleteDateColumn,
   UpdateDateColumn,
@@ -13,6 +15,7 @@ import {
 
 import { UserEntity } from '../../user/model/user-entity';
 import { HistoricEntity } from '../../historic/model/historic-entity';
+import { TagEntity } from '../../tag/model/tag-entity';
 
 @Entity()
 @ObjectType({ description: 'item entity table' })
@@ -60,4 +63,9 @@ export class ItemEntity {
   // @Field(() => HistoricEntity, { nullable: true })
   @OneToMany(() => HistoricEntity, (changes) => changes.item)
   changes: HistoricEntity[];
+
+  @Field(() => [TagEntity], { nullable: true })
+  @ManyToMany(() => TagEntity, (tags) => tags.items)
+  @JoinTable()
+  tags: TagEntity[];
 }
