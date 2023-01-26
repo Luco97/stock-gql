@@ -17,7 +17,6 @@ export class TagRepositoryService {
     const { skip, take, name } = params;
     return this._tagRepo
       .createQueryBuilder('tag')
-      .leftJoin('tag.items', 'items')
       .loadRelationCountAndMap(
         'items.item_count',
         'items.tags',
@@ -34,7 +33,6 @@ export class TagRepositoryService {
   find_one(ids?: number[], name?: string): Promise<TagEntity[]> {
     return this._tagRepo
       .createQueryBuilder('tag')
-      .leftJoin('tag.items', 'items')
       .loadRelationCountAndMap(
         'items.item_count',
         'items.tags',
