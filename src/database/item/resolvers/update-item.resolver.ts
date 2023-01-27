@@ -3,20 +3,28 @@ import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
 
 import { Request } from 'express';
 
-import { Update } from '../inputs/update.input';
-import { ItemEntity } from '../model/item-entity';
 import { RoleGuard } from '../../guards/role.guard';
+import { TransformTokenInterceptor } from '../interceptors/transform-token.interceptor';
+
+// Inputs/Outputs
 import { UpdateInput } from '../inputs/update.input';
 import { ChangeOutput } from '../outputs/change.output';
+import { Update, UpdateTags } from '../inputs/update.input';
+
+// Entites
+import { ItemEntity } from '../model/item-entity';
 import { HistoricEntity } from '../../historic/model/historic-entity';
-import { ItemRepositoryService } from '../repository/item-repository.service';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
+
+// Service
+import { ItemRepositoryService } from '../repository/item-repository.service';
+import { TagRepositoryService } from '../../tag/repository/tag-repository.service';
 import { HistoricRepositoryService } from '../../historic/repository/historic-repository.service';
-import { TransformTokenInterceptor } from '../interceptors/transform-token.interceptor';
 
 @Resolver()
 export class UpdateItemResolver {
   constructor(
+    private _tagService: TagRepositoryService,
     private _itemService: ItemRepositoryService,
     private _historicService: HistoricRepositoryService,
   ) {}
@@ -117,5 +125,47 @@ export class UpdateItemResolver {
         });
       }
     });
+  }
+
+  @Mutation(() => ChangeOutput, {
+    name: 'update_item_tags',
+    description: 'update the image of one item',
+  })
+  @SetMetadata('roles', ['basic', 'admin'])
+  @UseGuards(RoleGuard)
+  @UseInterceptors(TransformTokenInterceptor)
+  update_item_tags(@Args('params') updateTags: UpdateTags, @Context() context) {
+    const req: Request = context.req;
+
+    // interceptor values (always in)
+    const type: string = req.header('user_type');
+    const id_user = +req.header('user_id');
+
+    const { id_item, tags_id } = updateTags;
+
+    return new Promise<ChangeOutput>((resolve, reject) =>
+      Promise.all([
+        this.getItem({ id_item }, { id_user, type }),
+        this._tagService.find_one(tags_id),
+      ]).then(([item, tags]) => {
+        if (!item) resolve({ message: `item doesn't exist to update tags` });
+        else {
+          const avalible_tags_id: number[] = tags.map<number>((tag) => tag.id);
+          const drop_tags_id: number[] = item.tags.map<number>((tag) => tag.id);
+          this._itemService
+            .update_tags(id_item, avalible_tags_id, drop_tags_id)
+            .then(() => {
+              item.tags = tags;
+              const message: string = tags.length
+                ? `tags updated in item with id = ${id_item}`
+                : `all tags in item with id = ${id_item} out`;
+              resolve({
+                message,
+                item,
+              });
+            });
+        }
+      }),
+    );
   }
 }
