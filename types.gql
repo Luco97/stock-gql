@@ -2,6 +2,11 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+"""user entity table"""
+type UserEntity {
+  username: String!
+}
+
 """historic entity table"""
 type HistoricEntity {
   """historic register ID"""
@@ -48,11 +53,14 @@ type ItemEntity {
 
   """user item owner"""
   user: UserEntity
+  tags: [TagEntity!]
 }
 
-"""user entity table"""
-type UserEntity {
-  username: String!
+type TagEntity {
+  id: Float!
+  name: String!
+  description: String
+  item_count: Float
 }
 
 """output object of register_user"""
@@ -110,21 +118,22 @@ type HistoricOutput {
   count: Float!
 }
 
+"""response in find_all query"""
+type TagsOutput {
+  """array with the tags"""
+  items: [TagEntity!]!
+
+  """number of tags"""
+  count: Float!
+}
+
 type Query {
-  """
-  find all items query, user gets only their items & admin gets all from 'basic' users and their items
-  """
-  find_all(
-    """
-    find all items, if user role is 'basic' response with his items, if user role is 'admin' response with all items from 'basic' users and his items
-    """
-    paginate: read_all = {}
-  ): ItemsOutput!
+  find_all(params: read_tags!): TagsOutput!
 
   """
   find one item, if user role is 'basic' response with his item, if user role is 'admin' response with one item from 'basic' users OR his item
   """
-  find_one_item(id: Float!): ItemEntity
+  find_one_item(id: Float!): [ItemEntity!]
 
   """some randoms to show in home or somewhere"""
   find_some_randoms: ItemEntity
@@ -133,19 +142,16 @@ type Query {
   item_changes(itemId: find_all_changes!): HistoricOutput!
 }
 
-"""input to read items"""
-input read_all {
-  """quantity of items"""
+"""input to read tags"""
+input read_tags {
+  """quantity of tags"""
   take: Float = 10
 
-  """number of items to skip"""
+  """number of tags to skip"""
   skip: Float = 0
 
-  """field selected for order"""
-  orderBy: String = "createdAt"
-
-  """if is ASCendent or DESCendent"""
-  order: String = "ASC"
+  """if needs search specifically some like%"""
+  name: String = ""
 }
 
 """find all changes made in one item"""
@@ -176,10 +182,15 @@ type Mutation {
   """update the image of one item"""
   update_item(item: update_item!): ChangeOutput!
 
+  """update the image of one item"""
+  update_item_tags(params: update_tags!): ChangeOutput!
+
   """delete item mutation, only role 'admin' can delete items"""
   delete_item(id_item: Float!): ChangeOutput!
   validateToken: ValidateOutput!
   validateTypeBasic(type: String!): ValidateOutput!
+  create_tag(create_input: create_tag!): TagEntity!
+  update_tag(update_tag: update_tag!): Boolean!
 }
 
 """register object for user creation"""
@@ -233,4 +244,29 @@ input update_item {
 
   """new name in item"""
   name: String
+}
+
+input update_tags {
+  """item ID"""
+  id_item: Float!
+
+  """new tags"""
+  tags_id: [Float!]!
+}
+
+"""input to create tag"""
+input create_tag {
+  """Name of the tag"""
+  name: String!
+
+  """description of the tag"""
+  description: String!
+}
+
+input update_tag {
+  """tag ID"""
+  id_tag: Float!
+
+  """new description of the tag"""
+  description: String
 }
