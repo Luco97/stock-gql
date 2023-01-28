@@ -9,6 +9,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { AuthModule } from '../shared/auth/auth.module';
 
 // Entities
+import { TagEntity } from './tag/model/tag-entity';
 import { UserEntity } from './user/model/user-entity';
 import { ItemEntity } from './item/model/item-entity';
 import { HistoricEntity } from './historic/model/historic-entity';
@@ -63,7 +64,12 @@ import { UpdateResolver } from './tag/resolvers/update.resolver';
             : {},
       }),
     }),
-    TypeOrmModule.forFeature([UserEntity, ItemEntity, HistoricEntity]),
+    TypeOrmModule.forFeature([
+      UserEntity,
+      ItemEntity,
+      HistoricEntity,
+      TagEntity,
+    ]),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: 'types.gql',
