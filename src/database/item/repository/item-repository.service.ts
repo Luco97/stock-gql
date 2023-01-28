@@ -73,7 +73,7 @@ export class ItemRepositoryService {
     const { id_user, id_item } = parameters;
     return this._itemRepo
       .createQueryBuilder('item')
-      .leftJoin('item.user', 'user')
+      .leftJoinAndSelect('item.user', 'user')
       .leftJoinAndSelect('item.tags', 'tags')
       .loadRelationCountAndMap('tags.item_count', 'tags.items', 'chips', (qb) =>
         qb.orderBy('cnt'),
