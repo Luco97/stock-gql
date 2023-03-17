@@ -40,7 +40,7 @@ export class TagRepositoryService {
         (qb) => qb.orderBy('cnt'),
       )
       .where('LOWER(tag.name) = LOWER(:name)', { name })
-      .orWhere('tag.id in (:...id)', { id: ids })
+      .orWhere('tag.id in (:...id)', { id: ids || [] })
       .getMany();
   }
 
