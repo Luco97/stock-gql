@@ -89,8 +89,9 @@ export class ItemRepositoryService {
     orderBy: string;
     id_user: Brackets;
     order: 'ASC' | 'DESC';
+    tagIDs?: number[];
   }): Promise<[ItemEntity[], number]> {
-    const { id_user, order, orderBy, skip, take } = parameters;
+    const { id_user, order, orderBy, skip, take, tagIDs } = parameters;
     return this._itemRepo
       .createQueryBuilder('items')
       .leftJoinAndSelect('items.user', 'user')
@@ -99,6 +100,7 @@ export class ItemRepositoryService {
         qb.orderBy('cnt'),
       )
       .where(id_user)
+      .orWhere('tags.id in (:...tagIDs)', { tagIDs: tagIDs || [] })
       .orderBy(
         `items.${
           ['name', 'stock', 'createdAt', 'updateAt'].includes(orderBy)
@@ -135,5 +137,36 @@ export class ItemRepositoryService {
   delete_item(parameters: { item_id: number }): Promise<UpdateResult> {
     const { item_id } = parameters;
     return this._itemRepo.softDelete({ id: item_id });
+  }
+
+  find_related(parameters: {
+    skip: number;
+    take: number;
+    orderBy: string;
+    id_user: number;
+    order: 'ASC' | 'DESC';
+    tagIDs?: number[];
+  }): Promise<[ItemEntity[], number]> {
+    const { id_user, order, orderBy, skip, take, tagIDs } = parameters;
+    return this._itemRepo
+      .createQueryBuilder('items')
+      .leftJoinAndSelect('items.user', 'user')
+      .leftJoinAndSelect('items.tags', 'tags')
+      .loadRelationCountAndMap('tags.item_count', 'tags.items', 'chips', (qb) =>
+        qb.orderBy('cnt'),
+      )
+      .where('user.id != :id_user', { id_user })
+      .andWhere('tags.id in (:...tagIDs)', { tagIDs: tagIDs || [] })
+      .orderBy(
+        `items.${
+          ['name', 'stock', 'createdAt', 'updateAt'].includes(orderBy)
+            ? orderBy
+            : 'createdAt'
+        }`,
+        ['ASC', 'DESC'].includes(order) ? order : 'ASC',
+      )
+      .take(take || 10)
+      .skip(skip * take || 0)
+      .getManyAndCount();
   }
 }
