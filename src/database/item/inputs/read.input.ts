@@ -31,3 +31,12 @@ export class ReadInput {
   })
   order: 'ASC' | 'DESC';
 }
+
+@InputType('read_all_related', { description: 'input to read items' })
+export class ReadRelatedInput extends ReadInput {
+  @Field(() => Number, {
+    nullable: false,
+    description: 'item ID',
+  })
+  id_item: number;
+}
