@@ -3,10 +3,10 @@ import { Args, Context, Query, Resolver } from '@nestjs/graphql';
 
 import { Request } from 'express';
 
-import { ReadInput } from '../inputs/read.input';
 import { ItemEntity } from '../model/item-entity';
 import { RoleGuard } from '../../guards/role.guard';
 import { ItemsOutput } from '../outputs/items.output';
+import { ReadInput, ReadRelatedInput } from '../inputs/read.input';
 import { ItemRepositoryService } from '../repository/item-repository.service';
 import { TransformTokenInterceptor } from '../interceptors/transform-token.interceptor';
 
@@ -101,7 +101,6 @@ export class ReadItemResolver {
     description: 'some randoms to show in home or somewhere',
   })
   async findRandoms(): Promise<ItemEntity[]> {
-    const NAMES: string[] = ['User'];
     return new Promise<ItemEntity[]>((resolve, reject) => {
       Promise.all([
         this._itemService.find_random(),
@@ -114,6 +113,55 @@ export class ReadItemResolver {
           item.name = `User ${index + 1}`;
         });
         resolve(items);
+      });
+    });
+  }
+
+  @Query(() => [ItemEntity])
+  @UseGuards(RoleGuard)
+  @UseInterceptors(TransformTokenInterceptor)
+  findRelated(
+    @Args('paginate', {
+      nullable: false,
+      name: 'find_all_related',
+      description: 'find all items related, related of any user',
+    })
+    getInput: ReadRelatedInput,
+    @Context() context,
+  ): Promise<ItemsOutput> {
+    const req: Request = context.req;
+
+    // interceptor values (always in)
+    const type: string = req.header('user_type');
+    const id_user = +req.header('user_id');
+
+    const { id_item, order, orderBy, skip, take } = getInput;
+    return new Promise<ItemsOutput>((resolve, reject) => {
+      let item: Promise<ItemEntity>;
+
+      if (type == 'basic')
+        item = this._itemService.find_one_item({
+          id_item,
+          id_user: this._itemService.basic_condition(id_user),
+        });
+      else
+        item = this._itemService.find_one_item({
+          id_item,
+          id_user: this._itemService.admin_condition(id_user),
+        });
+
+      item.then((item) => {
+        const tagIDs: number[] = item.tags.map<number>((element) => element.id);
+        this._itemService
+          .find_related({
+            id_user,
+            order,
+            orderBy,
+            skip,
+            take,
+            tagIDs,
+          })
+          .then(([items, count]) => resolve({ items, count }));
       });
     });
   }
