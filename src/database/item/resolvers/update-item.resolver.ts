@@ -29,29 +29,10 @@ export class UpdateItemResolver {
     private _historicService: HistoricRepositoryService,
   ) {}
 
-  async getItem(
-    itemUpdate: UpdateInput,
-    userInfo: { type: string; id_user: number },
-  ): Promise<ItemEntity> {
-    const { id_user, type } = userInfo;
-    const { id_item } = itemUpdate;
-    let item: Promise<ItemEntity>;
-    if (type == 'basic')
-      item = this._itemService.find_one_item({
-        id_item,
-        id_user: this._itemService.basic_condition(id_user),
-      });
-    else
-      item = this._itemService.find_one_item({
-        id_item,
-        id_user: this._itemService.admin_condition(id_user),
-      });
-    return item;
-  }
-
   @Mutation(() => ChangeOutput, {
     name: 'update_item',
-    description: 'update the image of one item',
+    description:
+      'update item (it create register of change in item into historic entity)',
   })
   @SetMetadata('roles', ['basic', 'admin'])
   @UseGuards(RoleGuard)
@@ -89,7 +70,7 @@ export class UpdateItemResolver {
 
       if (!changes.length) resolve({ message: `nothing to change` });
       else {
-        this.getItem({ id_item }, { id_user, type }).then((item) => {
+        this._itemService.getItem({ id_item, id_user, type }).then((item) => {
           if (!item)
             resolve({ message: `item with id = ${id_item} doesn't exist` });
           else {
@@ -145,7 +126,7 @@ export class UpdateItemResolver {
 
     return new Promise<ChangeOutput>((resolve, reject) =>
       Promise.all([
-        this.getItem({ id_item }, { id_user, type }),
+        this._itemService.getItem({ id_item, id_user, type }),
         this._tagService.find_one(tags_id),
       ]).then(([item, tags]) => {
         if (!item) resolve({ message: `item doesn't exist to update tags` });
