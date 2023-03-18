@@ -169,4 +169,24 @@ export class ItemRepositoryService {
       .skip(skip * take || 0)
       .getManyAndCount();
   }
+
+  getItem(parameters: {
+    type: string;
+    id_user: number;
+    id_item: number;
+  }): Promise<ItemEntity> {
+    const { id_item, id_user, type } = parameters;
+    let item: Promise<ItemEntity>;
+    if (type == 'basic')
+      item = this.find_one_item({
+        id_item,
+        id_user: this.basic_condition(id_user),
+      });
+    else
+      item = this.find_one_item({
+        id_item,
+        id_user: this.admin_condition(id_user),
+      });
+    return item;
+  }
 }
