@@ -117,14 +117,15 @@ export class ReadItemResolver {
     });
   }
 
-  @Query(() => [ItemEntity])
+  @Query(() => [ItemEntity], {
+    description: 'find all items related, related of any user',
+  })
   @UseGuards(RoleGuard)
   @UseInterceptors(TransformTokenInterceptor)
   findRelated(
     @Args('paginate', {
       nullable: false,
       name: 'find_all_related',
-      description: 'find all items related, related of any user',
     })
     getInput: ReadRelatedInput,
     @Context() context,

@@ -138,6 +138,9 @@ type Query {
   """some randoms to show in home or somewhere"""
   find_some_randoms: ItemEntity
 
+  """find all items related, related of any user"""
+  findRelated(paginate: read_all_related!): [ItemEntity!]!
+
   """find All changes of one item where id == 'itemId' """
   item_changes(itemId: find_all_changes!): HistoricOutput!
 }
@@ -152,6 +155,24 @@ input read_tags {
 
   """if needs search specifically some like%"""
   name: String = ""
+}
+
+"""input to read items"""
+input read_all_related {
+  """quantity of items"""
+  take: Float = 10
+
+  """number of items to skip"""
+  skip: Float = 0
+
+  """field selected for order"""
+  orderBy: String = "createdAt"
+
+  """if is ASCendent or DESCendent"""
+  order: String = "ASC"
+
+  """item ID"""
+  id_item: Float!
 }
 
 """find all changes made in one item"""
@@ -179,7 +200,9 @@ type Mutation {
   """mutation for item creation"""
   create_item(item: create_item): ItemEntity!
 
-  """update the image of one item"""
+  """
+  update item (it create register of change in item into historic entity)
+  """
   update_item(item: update_item!): ChangeOutput!
 
   """update the image of one item"""
@@ -188,7 +211,7 @@ type Mutation {
   """delete item mutation, only role 'admin' can delete items"""
   delete_item(id_item: Float!): ChangeOutput!
   validateToken: ValidateOutput!
-  validateTypeBasic(type: String!): ValidateOutput!
+  validateType(type: String!): ValidateOutput!
   create_tag(create_input: create_tag!): TagEntity!
   update_tag(update_tag: update_tag!): Boolean!
 }
