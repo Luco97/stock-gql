@@ -24,7 +24,7 @@ export class ValidateResolver {
   }
 
   @Mutation(() => ValidateOutput)
-  validateTypeBasic(
+  validateType(
     @Args('type') type: string,
     @Context() context,
   ): Promise<ValidateOutput> {
